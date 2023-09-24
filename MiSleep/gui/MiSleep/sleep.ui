@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>sleep</class>
+ <widget class="QMainWindow" name="sleep">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1352</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>900</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MiSleep</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../imgs/img.qrc">
+    <normaloff>:/.png/logo.png</normaloff>:/.png/logo.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="signalScrollArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>550</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>1048</width>
+            <height>739</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6"/>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollBar" name="timeSlider">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="sizeIncrement">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="maximum">
+          <number>999999999</number>
+         </property>
+         <property name="pageStep">
+          <number>30</number>
+         </property>
+         <property name="tracking">
+          <bool>false</bool>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="invertedAppearance">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="sleepStageArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>1048</width>
+            <height>120</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7"/>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::DefaultContextMenu</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>20</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">image: url(:/.png/entire_logo.png);</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="channelGroup">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="title">
+          <string>Channels</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5" columnstretch="0,0,0,0,0">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item row="14" column="0" colspan="5">
+           <widget class="QPushButton" name="filterBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;F&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Filter</string>
+            </property>
+            <property name="shortcut">
+             <string>F</string>
+            </property>
+           </widget>
+          </item>
+          <item row="21" column="0" colspan="2">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Analysis:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="22" column="0" colspan="5">
+           <widget class="QPushButton" name="spectrumBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;S&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Spectrum</string>
+            </property>
+            <property name="shortcut">
+             <string>S</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="0" colspan="5">
+           <widget class="Line" name="line_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0" colspan="2">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Filter:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="3">
+           <widget class="QPushButton" name="amplifyBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Up&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+            <property name="shortcut">
+             <string>Up</string>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="0" colspan="2">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Scaler:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="5">
+           <widget class="QPushButton" name="saveSleepStageDataBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
+            </property>
+            <property name="text">
+             <string>Merge as sleep stages</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4">
+           <widget class="QPushButton" name="channelDeleteBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: red;
+}</string>
+            </property>
+            <property name="text">
+             <string>Delete</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0" colspan="3">
+           <widget class="QComboBox" name="passSelecter">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>LowPass</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>HighPass</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>BandPass</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="20" column="0" colspan="5">
+           <widget class="Line" name="line_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="5">
+           <widget class="QListView" name="channelList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::SelectedClicked</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="4">
+           <widget class="QDoubleSpinBox" name="hzHighEdit">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.200000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>50.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="5">
+           <widget class="QPushButton" name="defaultTFBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Default channel for time frequency</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0" colspan="5">
+           <widget class="Line" name="line_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="3">
+           <widget class="QDoubleSpinBox" name="hzLowEdit">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>12.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="4">
+           <widget class="QPushButton" name="reductionBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Down&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>—</string>
+            </property>
+            <property name="shortcut">
+             <string>Down</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QPushButton" name="channelHideBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Hide</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="5">
+           <widget class="QPushButton" name="saveDataBt">
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
+            </property>
+            <property name="text">
+             <string>Save selected channel(s)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="17" column="4">
+           <widget class="QDoubleSpinBox" name="spectrumPercentileEdit">
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="decimals">
+             <number>2</number>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>99.700000000000003</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QPushButton" name="channelShowBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Show</string>
+            </property>
+           </widget>
+          </item>
+          <item row="17" column="0" colspan="4">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Colorbar percentile:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="title">
+          <string>Label</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="6" column="1" colspan="4">
+           <widget class="QCheckBox" name="autoScrollCheckBox">
+            <property name="text">
+             <string>Auto scroll</string>
+            </property>
+            <property name="shortcut">
+             <string>A</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="markerRadio">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Marker</string>
+            </property>
+            <property name="shortcut">
+             <string>Q</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="4">
+           <widget class="QPushButton" name="wakeBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>3: Wake</string>
+            </property>
+            <property name="shortcut">
+             <string>3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1" colspan="4">
+           <widget class="QPushButton" name="saveBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;CTRL+S&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
+            </property>
+            <property name="text">
+             <string>Save labels</string>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+S</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QRadioButton" name="startEndRadio">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;W&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Start-End</string>
+            </property>
+            <property name="shortcut">
+             <string>W</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QPushButton" name="labelBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Label</string>
+            </property>
+            <property name="shortcut">
+             <string>L</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QPushButton" name="remBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>2: REM</string>
+            </property>
+            <property name="shortcut">
+             <string>2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QPushButton" name="nremBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>1: NREM</string>
+            </property>
+            <property name="shortcut">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="title">
+          <string>Time</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="3" column="0" colspan="2">
+           <widget class="QComboBox" name="epochSelector">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Show 30 seconds</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 1 minute</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 5 minutes</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 30 minutes</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 1 hour</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 1 epoch</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 3 epochs</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 5 epochs </string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Show 9 epochs</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="epochShow">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QRadioButton" name="epochCustomRadio">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Custom(epochs)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QDateTimeEdit" name="dateTimeEdit">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="currentSection">
+             <enum>QDateTimeEdit::DaySection</enum>
+            </property>
+            <property name="displayFormat">
+             <string>dd:HH:mm:ss</string>
+            </property>
+            <property name="calendarPopup">
+             <bool>false</bool>
+            </property>
+            <property name="currentSectionIndex">
+             <number>0</number>
+            </property>
+            <property name="timeSpec">
+             <enum>Qt::LocalTime</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="secTimeEdit">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="maximum">
+             <number>999999996</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../imgs/img.qrc"/>
+ </resources>
+ <connections/>
+</ui>

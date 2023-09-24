@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>detail</class>
+ <widget class="QDialog" name="detail">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>630</width>
+    <height>412</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Detail</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QPlainTextEdit" name="detailEdit">
+     <property name="font">
+      <font>
+       <family>Microsoft JhengHei UI</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="plainText">
+      <string>original file: 
+animal number:
+date of experiment:
+number of experiment:
+start time:
+number of channels:
+sampling rate:
+Neurologger:
+type of battery:
+other setup:
+comments:
+channel1:
+channel2:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="confirmBt">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft JhengHei UI</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Confirm and plot</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

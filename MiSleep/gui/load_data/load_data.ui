@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Load_data</class>
+ <widget class="QMainWindow" name="Load_data">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>909</width>
+    <height>567</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Load data</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normalon>:/.png/logo.png</normalon>
+   </iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QWidget" name="widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>800</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>2222222</width>
+        <height>222222</height>
+       </size>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>50</number>
+       </property>
+       <property name="topMargin">
+        <number>50</number>
+       </property>
+       <property name="rightMargin">
+        <number>50</number>
+       </property>
+       <property name="bottomMargin">
+        <number>50</number>
+       </property>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Number of channel: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QSpinBox" name="epochLengthEdit">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>100000</number>
+         </property>
+         <property name="value">
+          <number>5</number>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1" colspan="3">
+        <widget class="QLineEdit" name="dataPathEdit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QDateTimeEdit" name="dateTimeEdit">
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="dateTime">
+          <datetime>
+           <hour>20</hour>
+           <minute>0</minute>
+           <second>0</second>
+           <year>2023</year>
+           <month>1</month>
+           <day>1</day>
+          </datetime>
+         </property>
+         <property name="displayFormat">
+          <string>yyyy/MM/dd HH:mm:ss</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1" colspan="3">
+        <widget class="QLineEdit" name="labelPathEdit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0" colspan="4">
+        <widget class="QPushButton" name="checkBt">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Channel Data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QSpinBox" name="SREdit">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="maximum">
+          <number>10000</number>
+         </property>
+         <property name="value">
+          <number>305</number>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QPushButton" name="dataSelectBt">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Select data file</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QSpinBox" name="channelNumEdit">
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei UI</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="maximum">
+          <number>10</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="EpochLengthLabel">
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Epoch length(Sec):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="SRLabel">
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Sampleing rate(HZ):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QPushButton" name="labelSelectBt">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Set/Select label file</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Time acquisition: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="2" rowspan="2" colspan="2">
+        <widget class="QLabel" name="label_3">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">image: url(:/.png/entire_logo.png);</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="../../imgs/img.qrc"/>
+ </resources>
+ <connections/>
+</ui>
