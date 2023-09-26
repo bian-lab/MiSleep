@@ -56,7 +56,7 @@ def lst2group(pre_lst):
     return [[each[0][0], each[-1][0], each[0][1]] for each in pre_lst]
 
 
-def get_3_stages(sleep_label_lst, data, SR):
+def get_4_stages(sleep_label_lst, data, SR):
     """
     Divide the selected data into 3 stages
     :param sleep_label_lst: Sleep stage label, format: [[1, 2], [2, 2], [3, 2], ...]
@@ -72,6 +72,7 @@ def get_3_stages(sleep_label_lst, data, SR):
     NREM_data = [[] for _ in range(channel_num)]
     REM_data = [[] for _ in range(channel_num)]
     Wake_data = [[] for _ in range(channel_num)]
+    Init_data = [[] for _ in range(channel_num)]
 
     for each in labels:
         # NREM sleep stage
@@ -89,4 +90,9 @@ def get_3_stages(sleep_label_lst, data, SR):
             for i in range(channel_num):
                 Wake_data[i] += list(data[i][each[0] * SR: (each[1] + 1) * SR])
 
-    return NREM_data, REM_data, Wake_data
+        # Initial sleep stage
+        if each[2] == 4:
+            for i in range(channel_num):
+                Init_data[i] += list(data[i][each[0] * SR: (each[1] + 1) * SR])
+
+    return NREM_data, REM_data, Wake_data, Init_data

@@ -101,6 +101,7 @@ class load_gui(QMainWindow, Ui_Load_data):
             if self.total_seconds < 30:
                 QMessageBox.about(self, "Error", "Do not accept data less than 30 seconds!")
                 self.dataPathEdit.clear()
+                self.data_path = ''
                 return
             if len(self.data) != self.channel_num:
                 QMessageBox.about(self, "Error",
@@ -108,6 +109,7 @@ class load_gui(QMainWindow, Ui_Load_data):
                                   + str(self.data.shape[0]) + " does not match the entered channel number "
                                   + str(self.channel_num) + "!")
                 self.dataPathEdit.clear()
+                self.data_path = ''
                 return
 
             self.channel_num = self.data.shape[0]
@@ -118,7 +120,7 @@ class load_gui(QMainWindow, Ui_Load_data):
 
             if len(self.label_file) == 0:
                 # Initialize the labels
-                self.label_file.append("READ ONLY! DO NOT EDIT!\n3-Wake 2-REM 1-NREM")
+                self.label_file.append("READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM")
                 self.label_file.append("\nSave time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                 self.label_file.append("\nAcquisition time: " +
                                        self.acquisition_time.toPyDateTime().strftime("%Y-%m-%d %H:%M:%S"))
@@ -138,7 +140,7 @@ class load_gui(QMainWindow, Ui_Load_data):
                 # [[start_timestamp, start_sec, 1, end_timestamp, end_sec, 0, label_type, label_name], ..]
                 # The '1' and '0' above are stand for 'start' and 'end' respectively
 
-                sleep_stage = [(label_start_time, label_end_time, '3', 'Wake')]
+                sleep_stage = [(label_start_time, label_end_time, '4', 'INIT')]
                 sleep_stage_format = "\n".join([", ".join([second2time(second=each[0]), str(each[0]), '1',
                                                            second2time(second=each[1]), str(each[1]), '0', each[2],
                                                            each[3]]) for each in sleep_stage])
@@ -167,6 +169,7 @@ class load_gui(QMainWindow, Ui_Load_data):
                     QMessageBox.about(self, "Error",
                                       "Something wrong with your label file, please check it or create a new one.")
                     self.labelPathEdit.clear()
+                    self.label_path = ''
                     return
 
                 acquisition_time = datetime.datetime.strptime(self.label_file[3].split(": ")[1], "%Y-%m-%d %H:%M:%S")

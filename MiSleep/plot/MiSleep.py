@@ -25,7 +25,7 @@ from scipy.signal import butter, welch
 from MiSleep.gui.MiSleep.labels import Ui_label
 from MiSleep.gui.MiSleep.sleep import Ui_sleep
 from MiSleep.gui.MiSleep.spectrum import Ui_spectrum
-from MiSleep.utils.utils import second2time, lst2group, get_3_stages
+from MiSleep.utils.utils import second2time, lst2group, get_4_stages
 
 
 class sleep(QMainWindow, Ui_sleep):
@@ -87,7 +87,7 @@ class sleep(QMainWindow, Ui_sleep):
 
         self.SR = SR
         self.epoch_length = epoch_length
-        self.stage_type_dict = {1: 'NREM', 2: 'REM', 3: 'Wake'}
+        self.stage_type_dict = {1: 'NREM', 2: 'REM', 3: 'Wake', 4: 'INIT'}
         self.acquisition_time = acquisition_time
 
         # Initialize some widgets' initial value and setup
@@ -97,7 +97,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.epochShow.setMaximum(int(self.total_seconds / self.epoch_length))
         self.epoch_selector_dict = {0: 30, 1: 60, 2: 300, 3: 1800, 4: 3600, 5: self.epoch_length,
                                     6: 3 * self.epoch_length, 7: 5 * self.epoch_length, 8: 9 * self.epoch_length}
-        self.autoScrollCheckBox.setChecked(True)  # Select auto scroll
+        self.autoScrollCheckBox.setChecked(False)  # Select auto scroll
         self.markerRadio.setChecked(True)  # Select mark radio
 
         # Initialize other attributes
@@ -124,7 +124,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.signal_ax = self.signal_figure.subplots(nrows=self.channel_num + 1, ncols=1)
         self.signal_figure.set_tight_layout(True)
         self.signal_figure.tight_layout(pad=0, w_pad=0, h_pad=0)
-        self.signal_figure.subplots_adjust(hspace=0, left=0.02, right=0.97, top=0.97, bottom=0.07)  # Adjust subplots
+        self.signal_figure.subplots_adjust(hspace=0, left=0.03, right=0.97, top=0.97, bottom=0.07)  # Adjust subplots
         # Put the figure to a canvas
         self.signal_canvas = FigureCanvas(self.signal_figure)
         # Add button click release event for signal canvas
@@ -164,6 +164,8 @@ class sleep(QMainWindow, Ui_sleep):
         self.remSc.activated.connect(self.REM_window)
         self.wakeSc = QShortcut(QKeySequence('Shift+3'), self)
         self.wakeSc.activated.connect(self.Wake_window)
+        self.initSc = QShortcut(QKeySequence('Shift+4'), self)
+        self.initSc.activated.connect(self.INIT_window)
 
         # Set a timer
         self.save_timer = QTimer(self)
@@ -238,6 +240,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.remBt.clicked.connect(self.REM_start_end)
         self.nremBt.clicked.connect(self.NREM_start_end)
         self.wakeBt.clicked.connect(self.Wake_start_end)
+        self.initBt.clicked.connect(self.Init_start_end)
 
         # Save labels
         self.saveBt.clicked.connect(self.save)
@@ -251,7 +254,9 @@ class sleep(QMainWindow, Ui_sleep):
 
         # Save selected channels' data
         self.saveDataBt.clicked.connect(self.save_selected_data)
-        self.saveSleepStageDataBt.clicked.connect(self.save_selected_data_stages)
+        self.saveSleepStageDataBt.clicked.connect(self.merge_selected_data)
+        self.saveAllBt.clicked.connect(self.save_all_data)
+        self.mergeAllBt.clicked.connect(self.merge_all_data)
 
         # Listen to label dialog list changes, if data changed, call update_label_list function to update
         self.label_dialog.slm.dataChanged.connect(self.update_label_list)
@@ -351,7 +356,8 @@ class sleep(QMainWindow, Ui_sleep):
 
             self.signal_ax[i].xaxis.set_ticks([])
             # self.signal_ax[i].yaxis.set_ticks([0], [self.channel_list[self.channel_show[i]]])
-            self.signal_ax[i].yaxis.set_ticks([])
+            # self.signal_ax[i].ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
+            self.signal_ax[i].yaxis.set_ticks([0], ['{:.2e}'.format(self.y_lims[self.channel_show[i - 1]])], rotation=90)
             self.signal_ax[i].set_ylabel(self.channel_list[self.channel_show[i - 1]])
 
             # Add axvline of each epoch
@@ -446,11 +452,12 @@ class sleep(QMainWindow, Ui_sleep):
             if len(self.start_end) == 2:
                 self.sleep_ax.axvline(self.start_end[1], color='lime', alpha=1)
 
-        self.sleep_ax.plot(range(self.total_seconds), [each[1] for each in self.sleep_stage_labels], linewidth=1)
-        self.sleep_ax.set_ylim(0.5, 3.5)
+        self.sleep_ax.step(range(self.total_seconds), [each[1] for each in self.sleep_stage_labels], where="mid",
+                           linewidth=1)
+        self.sleep_ax.set_ylim(0.5, 4.5)
         self.sleep_ax.set_xlim(0, self.total_seconds - 1)
         self.sleep_ax.xaxis.set_ticks([])
-        self.sleep_ax.yaxis.set_ticks(range(1, 4), ['NREM', 'REM', 'Wake'])
+        self.sleep_ax.yaxis.set_ticks(range(1, 5), ['NREM', 'REM', 'Wake', 'INIT'])
 
         self.sleep_stage_figure.canvas.draw()
         self.sleep_stage_figure.canvas.flush_events()
@@ -489,7 +496,8 @@ class sleep(QMainWindow, Ui_sleep):
             if epoch_show * self.epoch_length > self.total_seconds:
                 self.x_window_size_sec = self.total_seconds
             else:
-                self.x_window_size_sec = self.epoch_show * self.epoch_length
+                self.epoch_show = epoch_show
+                self.x_window_size_sec = epoch_show * self.epoch_length
         else:
             if self.epoch_selector_dict[self.epochSelector.currentIndex()] > self.total_seconds:
                 self.x_window_size_sec = self.total_seconds
@@ -533,6 +541,16 @@ class sleep(QMainWindow, Ui_sleep):
             for idx, label in enumerate(self.start_end_labels):
                 if sec in label:
                     self.start_end_labels.pop(idx)
+
+            # Also remove the start end label
+            if len(self.start_end) >= 1 and sec == self.start_end[0]:
+                self.start_end = []
+            elif len(self.start_end) == 2 and sec == self.start_end[1]:
+                self.start_end.pop(1)
+
+            self.update_sleep_stage()
+            self.window_plot()
+            return
 
         # If markerRadio selected
         elif self.markerRadio.isChecked():
@@ -935,6 +953,14 @@ class sleep(QMainWindow, Ui_sleep):
 
         self.label_all(sleep_type=3)
 
+    def INIT_window(self):
+        """
+        Label current window as INIT state
+        :return:
+        """
+
+        self.label_all(sleep_type=4)
+
     def REM_start_end(self):
         """
         Label selected start end area as REM sleep stage, call by button remBt or shortcut NUM1
@@ -958,6 +984,14 @@ class sleep(QMainWindow, Ui_sleep):
         """
 
         self.label_all(sleep_type=3, start_end=True)
+
+    def Init_start_end(self):
+        """
+        Label as INIT state, means not any kinds of label
+        :return:
+        """
+
+        self.label_all(sleep_type=4, start_end=True)
 
     def label_all(self, sleep_type=3, start_end=False):
         """
@@ -1025,7 +1059,7 @@ class sleep(QMainWindow, Ui_sleep):
             marker_labels = [''] + marker_labels
         if len(start_end_labels) > 0:
             start_end_labels = [''] + start_end_labels
-        labels = ["READ ONLY! DO NOT EDIT!\n3-Wake 2-REM 1-NREM",
+        labels = ["READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM",
                   "Save time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
                   self.acquisition_time.toPyDateTime().strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(self.SR),
                   "==========Marker==========" + '\n'.join(marker_labels),
@@ -1060,42 +1094,66 @@ class sleep(QMainWindow, Ui_sleep):
             else:
                 event.ignore()
 
-    def save_selected_data(self):
+    def save_all_data(self):
+        """
+        Save all data ignore whether selected channel(s), call by saveAllBt
+        :return:
+        """
+
+        self.save_selected_data(save_all=True)
+
+    def merge_all_data(self):
+        """
+        merge all data 
+        :return:
+        """
+
+        self.merge_selected_data(merge_all=True)
+
+    def save_selected_data(self, save_all=False):
         """
         Save selected data to matlab file format
         :return:
         """
 
-        selected_channel = [each.row() for each in self.channelList.selectedIndexes()]
-        if len(selected_channel) == 0:
-            QMessageBox.about(self, "Error", "Please select at least 1 channel to save!")
-            return
+        if save_all:
+            save_data = self.data
+        else:
+            selected_channel = [each.row() for each in self.channelList.selectedIndexes()]
+            if len(selected_channel) == 0:
+                QMessageBox.about(self, "Error", "Please select at least 1 channel to save!")
+                return
 
-        save_data = [self.data[idx] for idx in selected_channel]
+            save_data = [self.data[idx] for idx in selected_channel]
 
         fd, type_ = QFileDialog.getSaveFileName(self, "Save data", "E:/SelectedData", "*.mat;;*.MAT;;")
         if fd == '':
             return
         scipy.io.savemat(fd, mdict={'data': save_data})
 
-    def save_selected_data_stages(self):
+    def merge_selected_data(self, merge_all=False):
         """
         Save selected data to different sleep stages
         :return:
         """
 
-        # Get selected channels' data
-        selected_channel = [each.row() for each in self.channelList.selectedIndexes()]
-        if len(selected_channel) == 0:
-            QMessageBox.about(self, "Error", "Please select at least 1 channel to save!")
-            return
-
         self.setDisabled(True)
-        save_data = [self.data[idx] for idx in selected_channel]
+        if merge_all:
+            save_data = self.data
+        else:
+            # Get selected channels' data
+            selected_channel = [each.row() for each in self.channelList.selectedIndexes()]
+            if len(selected_channel) == 0:
+                QMessageBox.about(self, "Error", "Please select at least 1 channel to save!")
+                self.setDisabled(False)
+                return
+
+            save_data = [self.data[idx] for idx in selected_channel]
 
         # Get each time duration's sleep labels
-        nrem_data, rem_data, wake_data = get_3_stages(sleep_label_lst=self.sleep_stage_labels, data=save_data,
-                                                      SR=self.SR)
+        nrem_data, rem_data, wake_data, init_data = get_4_stages(sleep_label_lst=self.sleep_stage_labels,
+                                                                 data=save_data,
+                                                                 SR=self.SR)
         # construct 3 stages' label to save
         nrem_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(nrem_data[0]) / self.SR)),
                                  str(ceil(len(nrem_data[0]) / self.SR) - 1), '0', '1', 'NREM'])
@@ -1103,7 +1161,9 @@ class sleep(QMainWindow, Ui_sleep):
                                 str(ceil(len(rem_data[0]) / self.SR) - 1), '0', '2', 'REM'])
         wake_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(wake_data[0]) / self.SR)),
                                  str(ceil(len(wake_data[0]) / self.SR) - 1), '0', '3', 'Wake'])
-        labels = ["READ ONLY! DO NOT EDIT!\n3-Wake 2-REM 1-NREM",
+        init_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(wake_data[0]) / self.SR)),
+                                 str(ceil(len(wake_data[0]) / self.SR) - 1), '0', '4', 'INIT'])
+        labels = ["READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM",
                   "Save time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
                   self.acquisition_time.toPyDateTime().strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(self.SR),
                   "==========Marker==========",
@@ -1111,8 +1171,9 @@ class sleep(QMainWindow, Ui_sleep):
                   "==========Sleep stage=========="]
 
         # Get file path
-        path_ = QFileDialog.getExistingDirectory(self, "Select a folder to save 3 stages' data", "E:/")
+        path_ = QFileDialog.getExistingDirectory(self, "Select a folder to save 4 stages' data", "E:/")
         if path_ == '':
+            self.setDisabled(False)
             return
 
         if nrem_data[0]:
@@ -1129,11 +1190,18 @@ class sleep(QMainWindow, Ui_sleep):
                 _.append(rem_labels)
                 f.write('\n'.join(_))
 
-        if wake_data:
+        if wake_data[0]:
             scipy.io.savemat(path_ + "/wake_data.mat", mdict={'data': wake_data})
             with open(path_ + "/wake_labels.txt", 'w') as f:
                 _ = copy.deepcopy(labels)
                 _.append(wake_labels)
+                f.write('\n'.join(_))
+
+        if init_data[0]:
+            scipy.io.savemat(path_ + "/init_data.mat", mdict={'data': init_data})
+            with open(path_ + "/init_labels.txt", 'w') as f:
+                _ = copy.deepcopy(labels)
+                _.append(init_labels)
                 f.write('\n'.join(_))
 
         self.setEnabled(True)
@@ -1166,6 +1234,18 @@ class sleep(QMainWindow, Ui_sleep):
         self.channel_list = string_list
         self.is_saved = False
         self.window_plot()
+
+    def hover_show(self, event):
+        """
+        When hover on the figure, show the y coordinate
+        :return:
+        """
+
+    def draw_spectrum(self):
+        """
+        Plot spectrum and call spectrum dialog, also pass the data to save
+        :return:
+        """
 
 
 class label_dialog(QDialog, Ui_label):
@@ -1269,11 +1349,17 @@ class spectrum_dialog(QDialog, Ui_spectrum):
         self.epoch_length = 5
         self.spectrum_percentile = 99.7
 
-        self.spectrum_figure = plt.figure(figsize=(10, 2))
-        self.spectrum_ax = self.spectrum_figure.subplots(nrows=2, ncols=1)
+        self.spectrum_figure = plt.figure()
+        self.spectrum_ax = self.spectrum_figure.subplots(nrows=1, ncols=1)
         self.spectrum_canvas = FigureCanvas(self.spectrum_figure)
         self.spectrumArea.setWidget(self.spectrum_canvas)
-        self.saveBt.clicked.connect(self.save)
+        self.saveSpectrumBt.clicked.connect(self.save_spectrum)
+
+        self.tf_figure = plt.figure()
+        self.tf_ax = self.spectrum_figure.subplots(nrows=1, ncols=1)
+        self.tf_canvas = FigureCanvas(self.tf_figure)
+        self.timeFrequencyArea.setWidget(self.tf_canvas)
+        self.saveTFBt.clicked.connect(self.save_TF)
 
         # value
         self.spectrum_F = None
@@ -1306,31 +1392,39 @@ class spectrum_dialog(QDialog, Ui_spectrum):
             signal.spectrogram(self.data, fs=self.SR, noverlap=0, nperseg=self.SR)
         cmap = plt.cm.get_cmap('jet')
 
-        # MiSleep time frequency
-        pcm = self.spectrum_ax[0].pcolormesh(self.time_frequency_T, self.time_frequency_F, self.time_frequency_P,
-                                             cmap=cmap, vmax=np.percentile(self.time_frequency_P,
-                                                                           self.spectrum_percentile))
-        self.spectrum_figure.colorbar(pcm, ax=self.spectrum_ax[0])
-        self.spectrum_ax[0].set_ylim(0, 30)
-        self.spectrum_ax[0].set_xticks([])
+        # plot time frequency
+        pcm = self.tf_ax.pcolormesh(self.time_frequency_T, self.time_frequency_F[:31], self.time_frequency_P[:31],
+                                    cmap=cmap, vmax=np.percentile(self.time_frequency_P,
+                                                                  self.spectrum_percentile))
+        self.tf_figure.colorbar(pcm, ax=self.tf_ax)
+        self.tf_ax.set_ylim(0, 30)
+        self.tf_ax.set_xticks([each for each in range(0, self.start_end[1] - self.start_end[0],
+                                                      int((self.start_end[1] - self.start_end[0]) / 5))],
+                              [each + self.start_end[0] for each in range(0, self.start_end[1] - self.start_end[0],
+                                                                          int((self.start_end[1] - self.start_end[
+                                                                              0]) / 5))])
+        self.tf_ax.set_xlabel("Time (S)")
+        self.tf_ax.set_ylabel("Frequency (HZ)")
 
         # MiSleep spectrum
         # self.spectrum_ax[1].clear()
         major_ticks_top = np.linspace(0, 50, 26)
         minor_ticks_top = np.linspace(0, 50, 51)
 
-        self.spectrum_ax[1].xaxis.set_ticks(major_ticks_top)
-        self.spectrum_ax[1].xaxis.set_ticks(minor_ticks_top, minor=True)
-        self.spectrum_ax[1].grid(which="major", alpha=0.6)
-        self.spectrum_ax[1].grid(which="minor", alpha=0.3)
+        self.spectrum_ax.xaxis.set_ticks(major_ticks_top)
+        self.spectrum_ax.xaxis.set_ticks(minor_ticks_top, minor=True)
+        self.spectrum_ax.grid(which="major", alpha=0.6)
+        self.spectrum_ax.grid(which="minor", alpha=0.3)
 
-        self.spectrum_ax[1].set_xlim(0, 50)
-        self.spectrum_ax[1].plot(self.spectrum_F, self.spectrum_P)
-        self.spectrum_ax[1].set_xlabel("Frequency (Hz)")
-        self.spectrum_ax[1].set_ylabel("Power spectral density (Power/Hz)")
+        self.spectrum_ax.set_xlim(0, 50)
+        self.spectrum_ax.plot(self.spectrum_F, self.spectrum_P)
+        self.spectrum_ax.set_xlabel("Frequency (Hz)")
+        self.spectrum_ax.set_ylabel("Power spectral density (Power/Hz)")
 
         self.spectrum_figure.canvas.draw()
         self.spectrum_figure.canvas.flush_events()
+        self.tf_figure.canvas.draw()
+        self.tf_figure.canvas.flush_events()
 
     def refresh_canvas(self):
         """
@@ -1338,12 +1432,19 @@ class spectrum_dialog(QDialog, Ui_spectrum):
         :return:
         """
 
-        self.spectrum_figure = plt.figure(figsize=(10, 2))
-        self.spectrum_ax = self.spectrum_figure.subplots(nrows=2, ncols=1)
+        self.spectrum_figure = plt.figure()
+        self.spectrum_figure.set_tight_layout(True)
+        self.spectrum_ax = self.spectrum_figure.subplots(nrows=1, ncols=1)
         self.spectrum_canvas = FigureCanvas(self.spectrum_figure)
         self.spectrumArea.setWidget(self.spectrum_canvas)
 
-    def save(self):
+        self.tf_figure = plt.figure()
+        self.tf_figure.set_tight_layout(True)
+        self.tf_ax = self.tf_figure.subplots(nrows=1, ncols=1)
+        self.tf_canvas = FigureCanvas(self.tf_figure)
+        self.timeFrequencyArea.setWidget(self.tf_canvas)
+
+    def save_spectrum(self):
         """
         save figure to local path, popup a dialog for path selecting
         :return:
@@ -1351,7 +1452,7 @@ class spectrum_dialog(QDialog, Ui_spectrum):
 
         # save spectrum
         fd, type_ = QFileDialog.getSaveFileName(self, "Save figure and data",
-                                                'E:/figure_' + str(self.start_end[0]) + '_'
+                                                'E:/spectrum_' + str(self.start_end[0]) + '_'
                                                 + str(self.start_end[1]), "*.eps;;*.png;;*.tif;;*.pdf;;")
         if fd == '':
             return
@@ -1366,6 +1467,32 @@ class spectrum_dialog(QDialog, Ui_spectrum):
 
         data_arr = np.array([self.spectrum_F, self.spectrum_P]).transpose()
         np.savetxt(fd, X=data_arr, delimiter=',')
+
+        self.setEnabled(True)
+
+    def save_TF(self):
+        """
+        save figure to local path, popup a dialog for path selecting
+        :return:
+        """
+
+        # save spectrum
+        fd, type_ = QFileDialog.getSaveFileName(self, "Save figure and data",
+                                                'E:/time_frequency_' + str(self.start_end[0]) + '_'
+                                                + str(self.start_end[1]), "*.png;;*.tif;;*.pdf;;*.eps;;")
+        if fd == '':
+            return
+
+        self.setDisabled(True)
+        self.tf_figure.savefig(fd, dpi=300)
+        # extent = self.spectrum_ax[0].get_window_extent()
+        # self.spectrum_figure.savefig(fd, bbox_inches=extent)
+        # .savefig(fd, dpi=350)
+        # data_path = fd[:-4]
+        # fd = data_path + '_data.csv'
+
+        # data_arr = np.array([self.spectrum_F, self.spectrum_P]).transpose()
+        # np.savetxt(fd, X=data_arr, delimiter=',')
 
         self.setEnabled(True)
 
