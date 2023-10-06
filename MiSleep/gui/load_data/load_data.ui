@@ -292,7 +292,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Sampleing rate(HZ):</string>
+          <string>Sampling rate(HZ):</string>
          </property>
         </widget>
        </item>

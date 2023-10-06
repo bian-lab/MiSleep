@@ -88,7 +88,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.SR = SR
         self.epoch_length = epoch_length
         self.stage_type_dict = {1: 'NREM', 2: 'REM', 3: 'Wake', 4: 'INIT'}
-        self.acquisition_time = acquisition_time
+        self.acquisition_time = acquisition_time.toPyDateTime()
 
         # Initialize some widgets' initial value and setup
         self.epochCustomRadio.setChecked(False)
@@ -192,7 +192,7 @@ class sleep(QMainWindow, Ui_sleep):
 
         # Two time editor area, seconds and time stamp
         self.secTimeEdit.setMaximum(self.total_seconds - 1)
-        self.dateTimeEdit.setMaximumDateTime(datetime.datetime(2000, 1, 1, 0, 0, 0) + datetime.timedelta(
+        self.dateTimeEdit.setMaximumDateTime(self.acquisition_time + datetime.timedelta(
             seconds=self.total_seconds - 1))
         # Time editor time to go
         self.dateTimeEdit.dateTimeChanged.connect(self.data_time_go)
@@ -357,7 +357,8 @@ class sleep(QMainWindow, Ui_sleep):
             self.signal_ax[i].xaxis.set_ticks([])
             # self.signal_ax[i].yaxis.set_ticks([0], [self.channel_list[self.channel_show[i]]])
             # self.signal_ax[i].ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
-            self.signal_ax[i].yaxis.set_ticks([0], ['{:.2e}'.format(self.y_lims[self.channel_show[i - 1]])], rotation=90)
+            self.signal_ax[i].yaxis.set_ticks([0], ['{:.2e}'.format(self.y_lims[self.channel_show[i - 1]])],
+                                              rotation=90)
             self.signal_ax[i].set_ylabel(self.channel_list[self.channel_show[i - 1]])
 
             # Add axvline of each epoch
@@ -409,13 +410,26 @@ class sleep(QMainWindow, Ui_sleep):
 
         # Set xtick for the last figure, because all the figures share the same x-axis
         if len(x) < self.SR * 450:
+
             self.signal_ax[-1].set_xticks(
                 [each * self.SR for each in
                  range(self.position_sec, self.position_sec + self.x_window_size_sec + 1, self.epoch_length)],
                 [each for each in
                  range(self.position_sec, self.position_sec + self.x_window_size_sec + 1, self.epoch_length)],
-                rotation=45
-            )
+                rotation=45)
+            self.signal_ax[-1].set_xticks(
+                [each * self.SR for each in
+                 range(self.position_sec, self.position_sec + self.x_window_size_sec + 1)],
+                # [each for each in
+                #  range(self.position_sec, self.position_sec + self.x_window_size_sec + 1)],
+                minor=True)
+            # self.signal_ax[-1].set_xticks(
+            #     [each * self.SR for each in
+            #      range(self.position_sec, self.position_sec + self.x_window_size_sec + 1, self.epoch_length)],
+            #     [each for each in
+            #      range(self.position_sec, self.position_sec + self.x_window_size_sec + 1, self.epoch_length)],
+            #     rotation=45
+            # )
         else:
             self.signal_ax[-1].set_xticks(
                 [each * self.SR for each in
@@ -429,7 +443,7 @@ class sleep(QMainWindow, Ui_sleep):
 
         # Update the value of secTimeEdit and dateTimeEdit
         self.secTimeEdit.setValue(self.position_sec)
-        date_time = datetime.datetime(2000, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=self.position_sec)
+        date_time = self.acquisition_time + datetime.timedelta(seconds=self.position_sec)
         self.dateTimeEdit.setDateTime(date_time)
 
     def update_sleep_stage(self):
@@ -711,7 +725,7 @@ class sleep(QMainWindow, Ui_sleep):
 
         date_time = self.dateTimeEdit.dateTime().toPyDateTime()
         # Change time to second format and jump
-        self.position_sec = int((date_time - datetime.datetime(2000, 1, 1, 0, 0, 0)).total_seconds())
+        self.position_sec = int((date_time - self.acquisition_time).total_seconds())
         self.timeSlider.setValue(self.position_sec)
 
     def reset_spectrum_percentile(self):
@@ -1039,19 +1053,21 @@ class sleep(QMainWindow, Ui_sleep):
         :return:
         """
 
-        print("saving...")
         self.saveBt.setDisabled(True)
         # Preprocess labels in three label lists, convert to the format in the label file
         marker_labels = [
-            ', '.join([second2time(each[0]), str(each[0]), '1', second2time(each[0]), str(each[0]), '0', '1', each[1]])
+            ', '.join([second2time(each[0], ac_time=self.acquisition_time), str(each[0]), '1',
+                       second2time(each[0], ac_time=self.acquisition_time), str(each[0]), '0', '1', each[1]])
             for each in self.marker_labels]
-        start_end_labels = [', '.join([second2time(each[0]), str(each[0]), '1', second2time(each[1]), str(each[1]), '0',
+        start_end_labels = [', '.join([second2time(each[0], ac_time=self.acquisition_time), str(each[0]), '1',
+                                       second2time(each[1], ac_time=self.acquisition_time), str(each[1]), '0',
                                        '1', each[2]]) for each in self.start_end_labels]
 
         # Sleep stage data is [[sec, label_type], ...], need to sort by label_type and construct a label list,
         # and convert to the format [[start_sec, end_sec, label_type]]
         sleep_stage_labels = lst2group(self.sleep_stage_labels)
-        sleep_stage_labels = [', '.join([second2time(each[0]), str(each[0]), '1', second2time(each[1]), str(each[1]),
+        sleep_stage_labels = [', '.join([second2time(each[0], ac_time=self.acquisition_time), str(each[0]), '1',
+                                         second2time(each[1], ac_time=self.acquisition_time), str(each[1]),
                                          '0', str(each[2]), self.stage_type_dict[each[2]]])
                               for each in sleep_stage_labels]
 
@@ -1061,7 +1077,7 @@ class sleep(QMainWindow, Ui_sleep):
             start_end_labels = [''] + start_end_labels
         labels = ["READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM",
                   "Save time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
-                  self.acquisition_time.toPyDateTime().strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(self.SR),
+                  self.acquisition_time.strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(self.SR),
                   "==========Marker==========" + '\n'.join(marker_labels),
                   "==========Start-End==========" + '\n'.join(start_end_labels),
                   "==========Sleep stage==========", '\n'.join(sleep_stage_labels)]
@@ -1155,17 +1171,21 @@ class sleep(QMainWindow, Ui_sleep):
                                                                  data=save_data,
                                                                  SR=self.SR)
         # construct 3 stages' label to save
-        nrem_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(nrem_data[0]) / self.SR)),
+        nrem_labels = ', '.join([second2time(0, ac_time=self.acquisition_time), str(0), '1',
+                                 second2time(ceil(len(nrem_data[0]) / self.SR), ac_time=self.acquisition_time),
                                  str(ceil(len(nrem_data[0]) / self.SR) - 1), '0', '1', 'NREM'])
-        rem_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(rem_data[0]) / self.SR)),
+        rem_labels = ', '.join([second2time(0, ac_time=self.acquisition_time), str(0), '1',
+                                second2time(ceil(len(rem_data[0]) / self.SR), ac_time=self.acquisition_time),
                                 str(ceil(len(rem_data[0]) / self.SR) - 1), '0', '2', 'REM'])
-        wake_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(wake_data[0]) / self.SR)),
+        wake_labels = ', '.join([second2time(0, ac_time=self.acquisition_time), str(0), '1',
+                                 second2time(ceil(len(wake_data[0]) / self.SR), ac_time=self.acquisition_time),
                                  str(ceil(len(wake_data[0]) / self.SR) - 1), '0', '3', 'Wake'])
-        init_labels = ', '.join([second2time(0), str(0), '1', second2time(ceil(len(wake_data[0]) / self.SR)),
-                                 str(ceil(len(wake_data[0]) / self.SR) - 1), '0', '4', 'INIT'])
+        init_labels = ', '.join([second2time(0, ac_time=self.acquisition_time), str(0), '1',
+                                 second2time(ceil(len(init_data[0]) / self.SR), ac_time=self.acquisition_time),
+                                 str(ceil(len(init_data[0]) / self.SR) - 1), '0', '4', 'INIT'])
         labels = ["READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM",
                   "Save time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
-                  self.acquisition_time.toPyDateTime().strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(self.SR),
+                  self.acquisition_time.strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(self.SR),
                   "==========Marker==========",
                   "==========Start-End==========",
                   "==========Sleep stage=========="]

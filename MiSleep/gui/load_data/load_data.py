@@ -184,7 +184,7 @@ class Ui_Load_data(object):
         self.checkBt.setText(_translate("Load_data", "Channel Data"))
         self.dataSelectBt.setText(_translate("Load_data", "Select data file"))
         self.EpochLengthLabel.setText(_translate("Load_data", "Epoch length(Sec):"))
-        self.SRLabel.setText(_translate("Load_data", "Sampleing rate(HZ):"))
+        self.SRLabel.setText(_translate("Load_data", "Sampling rate(HZ):"))
         self.labelSelectBt.setText(_translate("Load_data", "Set/Select label file"))
         self.label.setText(_translate("Load_data", "Time acquisition: "))
 from MiSleep.imgs import img_rc

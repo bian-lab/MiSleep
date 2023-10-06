@@ -13,14 +13,15 @@ from itertools import groupby
 import scipy
 
 
-def second2time(second):
+def second2time(second, ac_time):
     """
-    Pass second, return time format %d:%H:%M:%S from 00:00:00:00
+    Pass second, return time format %d:%H:%M:%S from acquisition time
     :param second:
+    :param ac_time: acquisition time
     :return:
     """
 
-    return (datetime.datetime(2000, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=second)).strftime("%d:%H:%M:%S")
+    return (ac_time + datetime.timedelta(seconds=second)).strftime("%d:%H:%M:%S")
 
 
 def time_delta2second(str_time1, str_time2):
