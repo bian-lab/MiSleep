@@ -100,16 +100,16 @@ class load_gui(QMainWindow, Ui_Load_data):
             # Do not accept the data is less than 30 s
             if self.total_seconds < 30:
                 QMessageBox.about(self, "Error", "Do not accept data less than 30 seconds!")
-                self.dataPathEdit.clear()
-                self.data_path = ''
+                # self.dataPathEdit.clear()
+                # self.data_path = ''
                 return
             if len(self.data) != self.channel_num:
                 QMessageBox.about(self, "Error",
                                   "Number of channels in data file "
                                   + str(self.data.shape[0]) + " does not match the entered channel number "
                                   + str(self.channel_num) + "!")
-                self.dataPathEdit.clear()
-                self.data_path = ''
+                # self.dataPathEdit.clear()
+                # self.data_path = ''
                 return
 
             self.channel_num = self.data.shape[0]
@@ -141,9 +141,10 @@ class load_gui(QMainWindow, Ui_Load_data):
                 # The '1' and '0' above are stand for 'start' and 'end' respectively
 
                 sleep_stage = [(label_start_time, label_end_time, '4', 'INIT')]
-                sleep_stage_format = "\n".join([", ".join([second2time(second=each[0]), str(each[0]), '1',
-                                                           second2time(second=each[1]), str(each[1]), '0', each[2],
-                                                           each[3]]) for each in sleep_stage])
+                sleep_stage_format = "\n".join(
+                    [", ".join([second2time(second=each[0], ac_time=self.acquisition_time), str(each[0]), '1',
+                                second2time(second=each[1], ac_time=self.acquisition_time), str(each[1]), '0', each[2],
+                                each[3]]) for each in sleep_stage])
                 self.label_file += sleep_stage_format
 
                 f.write("".join(self.label_file))
@@ -167,9 +168,9 @@ class load_gui(QMainWindow, Ui_Load_data):
                 # -1 because the time start from 0 and total seconds is start from 1
                 if self.total_seconds - 1 != (int(label_end_time) - int(label_start_time)):
                     QMessageBox.about(self, "Error",
-                                      "Something wrong with your label file, please check it or create a new one.")
-                    self.labelPathEdit.clear()
-                    self.label_path = ''
+                                      "Invalid label file, please check it or create a new one.")
+                    # self.labelPathEdit.clear()
+                    # self.label_path = ''
                     return
 
                 acquisition_time = datetime.datetime.strptime(self.label_file[3].split(": ")[1], "%Y-%m-%d %H:%M:%S")
@@ -185,8 +186,8 @@ class load_gui(QMainWindow, Ui_Load_data):
                            self.label_file[sleep_stage_label_idx + 1:]]
 
         except Exception as e:
-            QMessageBox.about(self, "Error", "Your data file is invalid, please check the data format!")
-            self.dataPathEdit.clear()
+            QMessageBox.about(self, "Error", "Invalid data file, please check the data format!")
+            # self.dataPathEdit.clear()
             return
 
         win_plot.__init__(data=self.data, labels=self.labels, label_file=self.label_path,

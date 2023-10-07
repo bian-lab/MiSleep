@@ -1448,7 +1448,7 @@ class spectrum_dialog(QDialog, Ui_spectrum):
 
     def refresh_canvas(self):
         """
-        Color bar cannot be delete, refresh the canvas every time
+        Color bar cannot be deleted, refresh the canvas every time
         :return:
         """
 
