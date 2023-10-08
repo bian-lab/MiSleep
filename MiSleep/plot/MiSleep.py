@@ -9,6 +9,7 @@
 """
 import copy
 import datetime
+import time
 from math import ceil
 
 import numpy as np
@@ -88,7 +89,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.SR = SR
         self.epoch_length = epoch_length
         self.stage_type_dict = {1: 'NREM', 2: 'REM', 3: 'Wake', 4: 'INIT'}
-        self.acquisition_time = acquisition_time.toPyDateTime()
+        self.acquisition_time = acquisition_time
 
         # Initialize some widgets' initial value and setup
         self.epochCustomRadio.setChecked(False)
@@ -194,6 +195,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.secTimeEdit.setMaximum(self.total_seconds - 1)
         self.dateTimeEdit.setMaximumDateTime(self.acquisition_time + datetime.timedelta(
             seconds=self.total_seconds - 1))
+        self.dateTimeEdit.setDateTime(self.acquisition_time + datetime.timedelta(seconds=self.position_sec))
         # Time editor time to go
         self.dateTimeEdit.dateTimeChanged.connect(self.data_time_go)
         self.secTimeEdit.valueChanged.connect(self.sec_time_go)
@@ -279,18 +281,30 @@ class sleep(QMainWindow, Ui_sleep):
 
         position = int(self.position_sec * self.SR)  # Convert to point
 
-        if position + self.x_window_size > self.sample_num:
-            # Jump to end
-            position = self.sample_num - self.x_window_size
-        elif position < 0:
-            position = 0
+        # if position + self.x_window_size > self.sample_num:
+        #     # Jump to end
+        #     position = self.sample_num - self.x_window_size
+        # elif position < 0:
+        #     position = 0
 
-        self.position_sec = int(position / self.SR)
+        # self.position_sec = int(position / self.SR)
 
         x = list(self.samples_x[position: position + self.x_window_size])  # Construct x-axis index
 
         # get sleep stage
-        sleep_labels = lst2group(self.sleep_stage_labels)
+        if self.position_sec == 0:
+            sleep_labels = lst2group(
+                self.sleep_stage_labels[self.position_sec: self.position_sec+self.x_window_size_sec+2])
+        else:
+            sleep_labels = lst2group(
+                self.sleep_stage_labels[self.position_sec-1: self.position_sec + self.x_window_size_sec + 2])
+
+        show_sleep_label = []
+        for each in sleep_labels:
+            if each[0] * self.SR in x:
+                show_sleep_label.append([each[0] * self.SR, "s-" + self.stage_type_dict[each[2]], 'left'])
+            if each[1] * self.SR in x:
+                show_sleep_label.append([(each[1] + 1) * self.SR, "e-" + self.stage_type_dict[each[2]], 'right'])
 
         # Plot time-frequency figure at signal_ax[0]
         self.signal_ax[0].clear()
@@ -345,9 +359,8 @@ class sleep(QMainWindow, Ui_sleep):
                 self.signal_ax[i].axvline(self.start_end[1] * self.SR, color='lime', alpha=1)
             y = self.data_show[i - 1][position: position + self.x_window_size]
 
-            for each in sleep_labels:
-                if each[1] * self.SR in x:
-                    self.signal_ax[i].axvline((each[1] + 1) * self.SR, color='orange', alpha=0.3)
+            for each in show_sleep_label:
+                self.signal_ax[i].axvline(each[0], color='orange', alpha=0.3)
 
             self.signal_ax[i].set_ylim(ymin=-self.y_lims[self.channel_show[i - 1]],
                                        ymax=self.y_lims[self.channel_show[i - 1]])
@@ -392,21 +405,14 @@ class sleep(QMainWindow, Ui_sleep):
                                     color='lime')
 
         # Add annotation for sleep stage
-        # Only add annotation but no axvline in the bottom of last figure
-        for each in sleep_labels:
-            if each[0] * self.SR in x:
-                self.signal_ax[-1].text(
-                    x=each[0] * self.SR,
-                    y=-self.y_lims[self.channel_show[-1]],
-                    s="s-" + self.stage_type_dict[each[2]],
-                    color='orange')
-            if each[1] * self.SR in x:
-                self.signal_ax[-1].text(
-                    x=(each[1] + 1) * self.SR,
-                    y=-self.y_lims[self.channel_show[-1]],
-                    s="e-" + self.stage_type_dict[each[2]],
-                    horizontalalignment="right",
-                    color='orange')
+        # Only add annotation but no axvline on the bottom of last figure
+        for each in show_sleep_label:
+            self.signal_ax[-1].text(
+                x=each[0],
+                y=-self.y_lims[self.channel_show[-1]],
+                s=each[1],
+                horizontalalignment=each[2],
+                color='orange')
 
         # Set xtick for the last figure, because all the figures share the same x-axis
         if len(x) < self.SR * 450:
@@ -419,17 +425,8 @@ class sleep(QMainWindow, Ui_sleep):
                 rotation=45)
             self.signal_ax[-1].set_xticks(
                 [each * self.SR for each in
-                 range(self.position_sec, self.position_sec + self.x_window_size_sec + 1)],
-                # [each for each in
-                #  range(self.position_sec, self.position_sec + self.x_window_size_sec + 1)],
-                minor=True)
-            # self.signal_ax[-1].set_xticks(
-            #     [each * self.SR for each in
-            #      range(self.position_sec, self.position_sec + self.x_window_size_sec + 1, self.epoch_length)],
-            #     [each for each in
-            #      range(self.position_sec, self.position_sec + self.x_window_size_sec + 1, self.epoch_length)],
-            #     rotation=45
-            # )
+                 range(self.position_sec, self.position_sec + self.x_window_size_sec + 1)], minor=True)
+
         else:
             self.signal_ax[-1].set_xticks(
                 [each * self.SR for each in
@@ -442,9 +439,62 @@ class sleep(QMainWindow, Ui_sleep):
         self.signal_figure.canvas.flush_events()  # Flush canvas
 
         # Update the value of secTimeEdit and dateTimeEdit
-        self.secTimeEdit.setValue(self.position_sec)
+        # self.secTimeEdit.setValue(self.position_sec)
+        # date_time = self.acquisition_time + datetime.timedelta(seconds=self.position_sec)
+        # self.dateTimeEdit.setDateTime(date_time)
+
+    def position_sec_redraw(self, position_sec):
+        """
+        Deal with the self.position_sec change, caused by the following cases:
+            1. time slider bar
+            2. click sleep stage area
+            3. set date time go
+            4. set sec time go
+            5. auto scroll
+
+        check whether the position is valid, if so, call self.window_plot()
+        And change the following value related with self.position_sec:
+            1. data time edit
+            2. sec time edit
+            3. time slider bar value
+            4. sleep stage gray axvline
+
+        :return:
+        """
+
+        if position_sec + self.x_window_size_sec >= self.total_seconds:
+            self.position_sec = self.total_seconds - self.x_window_size_sec
+        elif position_sec <= 0:
+            self.position_sec = 0
+        else:
+            self.position_sec = position_sec
+
         date_time = self.acquisition_time + datetime.timedelta(seconds=self.position_sec)
+        self.timeSlider.valueChanged.disconnect()
+        self.dateTimeEdit.dateTimeChanged.disconnect()
+        self.secTimeEdit.valueChanged.disconnect()
+        self.secTimeEdit.setValue(self.position_sec)
+        self.timeSlider.setValue(self.position_sec)
         self.dateTimeEdit.setDateTime(date_time)
+
+        self.window_plot()
+
+        self.dateTimeEdit.dateTimeChanged.connect(self.data_time_go)
+        self.secTimeEdit.valueChanged.connect(self.sec_time_go)
+        self.timeSlider.valueChanged.connect(self.slider_change)
+
+    def check_position_sec(self, position_sec):
+        """
+        When self.position_sec need to change, check whether it is valid
+        :return:
+        """
+
+        if position_sec + self.x_window_size_sec >= self.total_seconds:
+            self.position_sec = self.total_seconds - self.x_window_size_sec
+        elif position_sec <= 0:
+            self.position_sec = 0
+        else:
+            self.position_sec = position_sec
 
     def update_sleep_stage(self):
         """
@@ -482,8 +532,8 @@ class sleep(QMainWindow, Ui_sleep):
         :return:
         """
 
-        self.position_sec = self.timeSlider.value()
-        self.window_plot()
+        position_sec = self.timeSlider.value()
+        self.position_sec_redraw(position_sec=position_sec)
 
     def check_epoch_custom(self):
         """
@@ -651,8 +701,8 @@ class sleep(QMainWindow, Ui_sleep):
         :return:
         """
 
-        self.position_sec = int(event.xdata)
-        self.window_plot()
+        position_sec = int(event.xdata)
+        self.position_sec_redraw(position_sec=position_sec)
 
     def reduction_y_lim(self):
         """
@@ -713,9 +763,8 @@ class sleep(QMainWindow, Ui_sleep):
         """
 
         # Get second
-        self.position_sec = self.secTimeEdit.value()
-        # Redraw MiSleep
-        self.timeSlider.setValue(self.position_sec)
+        position_sec = self.secTimeEdit.value()
+        self.position_sec_redraw(position_sec=position_sec)
 
     def data_time_go(self):
         """
@@ -725,8 +774,8 @@ class sleep(QMainWindow, Ui_sleep):
 
         date_time = self.dateTimeEdit.dateTime().toPyDateTime()
         # Change time to second format and jump
-        self.position_sec = int((date_time - self.acquisition_time).total_seconds())
-        self.timeSlider.setValue(self.position_sec)
+        position_sec = int((date_time - self.acquisition_time).total_seconds())
+        self.position_sec_redraw(position_sec=position_sec)
 
     def reset_spectrum_percentile(self):
         """
@@ -743,22 +792,17 @@ class sleep(QMainWindow, Ui_sleep):
         :return:
         """
 
-        if self.position_sec + self.x_window_size_sec >= self.total_seconds:
-            self.position_sec = self.total_seconds - self.x_window_size_sec
-        else:
-            self.position_sec = int(self.position_sec + self.x_window_size_sec)
-        self.timeSlider.setValue(self.position_sec)
+        position_sec = self.position_sec + self.x_window_size_sec
+        self.position_sec_redraw(position_sec=position_sec)
 
     def update_previous_position(self):
         """
         Previous window
         :return:
         """
-        if self.position_sec < self.x_window_size_sec:
-            self.position_sec = 0
-        else:
-            self.position_sec = int(self.position_sec - self.x_window_size_sec)
-        self.timeSlider.setValue(self.position_sec)
+
+        position_sec = self.position_sec - self.x_window_size_sec
+        self.position_sec_redraw(position_sec=position_sec)
 
     def add_channel(self):
         """
@@ -1009,7 +1053,8 @@ class sleep(QMainWindow, Ui_sleep):
 
     def label_all(self, sleep_type=3, start_end=False):
         """
-        Label current window's sleep stage, call by REM_window, NREM_window, Wake_window
+        Label current window's sleep stage, call by REM_window, NREM_window, Wake_window, Init_window and
+        start_end types
         :param start_end: Check whether is start_end type label or current window label
         :param sleep_type: sleep type to label
         :return:
@@ -1032,10 +1077,9 @@ class sleep(QMainWindow, Ui_sleep):
                 self.position_sec = self.start_end[1]
             else:
                 self.position_sec = int(self.position_sec + self.x_window_size_sec)
-            self.window_plot()
 
         self.is_saved = False
-        self.window_plot()
+        self.position_sec_redraw(position_sec=self.position_sec)
         self.update_sleep_stage()
 
     def auto_save(self):

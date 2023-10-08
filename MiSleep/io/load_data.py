@@ -13,12 +13,12 @@ import sys
 from math import ceil
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox
 from hdf5storage import loadmat
-from MiSleep.gui.load_data.load_data import Ui_Load_data
+from MiSleep.gui.load_data.load_data import Ui_MiSleep
 from MiSleep.plot.MiSleep import sleep
 from MiSleep.utils.utils import second2time
 
 
-class load_gui(QMainWindow, Ui_Load_data):
+class load_gui(QMainWindow, Ui_MiSleep):
     def __init__(self, parent=None):
         super(load_gui, self).__init__(parent)
         self.setupUi(self)
@@ -75,7 +75,7 @@ class load_gui(QMainWindow, Ui_Load_data):
         """
 
         # get value from editors
-        self.acquisition_time = self.dateTimeEdit.dateTime()
+        # self.acquisition_time = self.dateTimeEdit.dateTime()
         self.SR = self.SREdit.value()
         self.channel_num = self.channelNumEdit.value()
         self.epoch_length = self.epochLengthEdit.value()
@@ -119,11 +119,13 @@ class load_gui(QMainWindow, Ui_Load_data):
             self.label_file = [each.replace("\n", "") for each in f.readlines()]
 
             if len(self.label_file) == 0:
+
+                self.acquisition_time = self.dateTimeEdit.dateTime().toPyDateTime()
                 # Initialize the labels
                 self.label_file.append("READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM")
                 self.label_file.append("\nSave time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                 self.label_file.append("\nAcquisition time: " +
-                                       self.acquisition_time.toPyDateTime().strftime("%Y-%m-%d %H:%M:%S"))
+                                       self.acquisition_time.strftime("%Y-%m-%d %H:%M:%S"))
                 self.label_file.append("\nSampling rate: " + str(self.SR))
                 self.label_file.append("\n==========Marker==========")
                 self.label_file.append("\n==========Start-End==========")
@@ -173,8 +175,9 @@ class load_gui(QMainWindow, Ui_Load_data):
                     # self.label_path = ''
                     return
 
-                acquisition_time = datetime.datetime.strptime(self.label_file[3].split(": ")[1], "%Y-%m-%d %H:%M:%S")
-                self.dateTimeEdit.setDateTime(acquisition_time)
+                self.acquisition_time = datetime.datetime.strptime(self.label_file[3].split(": ")[1],
+                                                                   "%Y-%m-%d %H:%M:%S")
+                self.dateTimeEdit.setDateTime(self.acquisition_time)
             f = open(self.label_path, 'r+')
             self.label_file = [each.replace("\n", "") for each in f.readlines()]
             # If not empty or error, load the three types of labels
