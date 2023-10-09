@@ -25,8 +25,8 @@
    </iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0" colspan="2">
      <widget class="QTabWidget" name="tabList">
       <property name="currentIndex">
        <number>0</number>
@@ -410,6 +410,63 @@
        <attribute name="title">
         <string>Tools</string>
        </attribute>
+       <widget class="QLineEdit" name="labelFileEditor">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>80</y>
+          <width>661</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft JhengHei Light</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="selectFileBt">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>80</y>
+          <width>151</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft JhengHei Light</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Select a label file</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="transferBt">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>120</y>
+          <width>831</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft JhengHei UI Light</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Transfer and Save</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>

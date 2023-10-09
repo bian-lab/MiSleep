@@ -16,6 +16,7 @@ from hdf5storage import loadmat
 from MiSleep.gui.load_data.load_data import Ui_MiSleep
 from MiSleep.plot.MiSleep import sleep
 from MiSleep.utils.utils import second2time
+from MiSleep.io.transfer import Transfer
 
 
 class load_gui(QMainWindow, Ui_MiSleep):
@@ -35,6 +36,9 @@ class load_gui(QMainWindow, Ui_MiSleep):
 
         self.dataSelectBt.clicked.connect(self.get_data_path)
         self.labelSelectBt.clicked.connect(self.get_label_path)
+
+        self.selectFileBt.clicked.connect(self.get_label_for_transfer)
+        self.transferBt.clicked.connect(self.transfer)
 
         # Press check button and check data
         self.checkBt.clicked.connect(self.check)
@@ -200,6 +204,40 @@ class load_gui(QMainWindow, Ui_MiSleep):
         print("Check finish!")
         win_plot.my_sleep()
         win_plot.show()
+
+    def get_label_for_transfer(self):
+        """
+        Get label file for transfer
+        :return:
+        """
+
+        self.label_path, _ = QFileDialog.getOpenFileName(self, 'Select label file',
+                                                         r'E:/', 'txt Files (*.txt *.TXT)')
+        self.labelFileEditor.setText(self.label_path)
+
+    def transfer(self):
+        """
+        Transfer bar, use transfer class
+        :return:
+        """
+
+        if self.labelFileEditor.text() == '':
+            # Alert warning box
+            QMessageBox.about(self, "Error", "Please select a label file!")
+            return
+        label_file = open(self.labelFileEditor.text(), 'r+')
+        transfer = Transfer(label_file=label_file)
+        try:
+            transfer.get_params()
+            fd, type_ = QFileDialog.getSaveFileName(self, "Save results",
+                                                    'E:/transfer_results', "*.xlsx;;")
+            if fd == '':
+                return
+
+            transfer.save(fd)
+        except Exception as e:
+            print(e)
+            QMessageBox.about(self, "Error", "Invalid label file, please ensure the label file was create by MiSleep!")
 
 
 if __name__ == '__main__':
