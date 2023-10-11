@@ -10,13 +10,14 @@
 
 import datetime
 import sys
+
 from math import ceil
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox
 from hdf5storage import loadmat
 from MiSleep.gui.load_data.load_data import Ui_MiSleep
 from MiSleep.plot.MiSleep import sleep
 from MiSleep.utils.utils import second2time
-from MiSleep.io.transfer import Transfer
+from MiSleep.io.tools import Transfer, Hypnogram
 
 
 class load_gui(QMainWindow, Ui_MiSleep):
@@ -39,6 +40,7 @@ class load_gui(QMainWindow, Ui_MiSleep):
 
         self.selectFileBt.clicked.connect(self.get_label_for_transfer)
         self.transferBt.clicked.connect(self.transfer)
+        self.hypnogramBt.clicked.connect(self.hypnogram)
 
         # Press check button and check data
         self.checkBt.clicked.connect(self.check)
@@ -225,19 +227,66 @@ class load_gui(QMainWindow, Ui_MiSleep):
             # Alert warning box
             QMessageBox.about(self, "Error", "Please select a label file!")
             return
-        label_file = open(self.labelFileEditor.text(), 'r+')
-        transfer = Transfer(label_file=label_file)
+        label_file_path = self.labelFileEditor.text()
+        transfer = Transfer(label_file_path=label_file_path)
         try:
             transfer.get_params()
             fd, type_ = QFileDialog.getSaveFileName(self, "Save results",
                                                     'E:/transfer_results', "*.xlsx;;")
             if fd == '':
+                del transfer
                 return
 
-            transfer.save(fd)
+            transfer.save_transfer_results(fd)
+
+            del transfer
         except Exception as e:
             print(e)
             QMessageBox.about(self, "Error", "Invalid label file, please ensure the label file was create by MiSleep!")
+            del transfer
+            return
+
+    def hypnogram(self):
+        """
+        Draw hypnogram and save
+        :return:
+        """
+
+        if self.labelFileEditor.text() == '':
+            # Alert warning box
+            QMessageBox.about(self, "Error", "Please select a label file!")
+            return
+
+        color_map = {0: 'blue', 1: 'red', 2: 'purple', 3: 'orange', 4: 'green', 5: 'yellow'}
+        # Get params from GUI
+        line_color = color_map[self.colorSelector.currentIndex()]
+        start_sec = self.startSecEditor.value()
+        end_sec = self.endSecEditor.value()
+
+        if end_sec != 99 and end_sec - start_sec < 100:
+            # Alert warning box
+            QMessageBox.about(self, "Warning", "Hypnogram time duration should be 100 seconds at least!")
+            return
+        title = self.titleEditor.text()
+        label_file_path = self.labelFileEditor.text()
+
+        hypnogram = Hypnogram(label_file_path=label_file_path, line_color=line_color, start_sec=start_sec,
+                              end_sec=end_sec, title=title)
+        try:
+            hypnogram.get_params()
+            fd, type_ = QFileDialog.getSaveFileName(self, "Save hypnogram",
+                                                    f'E:/{title}', "*.png;;*.pdf;;*.eps;;")
+            if fd == '':
+                del hypnogram
+                return
+
+            hypnogram.draw_save_hypnogram(save_path=fd)
+            del hypnogram
+        except Exception as e:
+            print(e)
+            QMessageBox.about(self, "Error", "Invalid label file, please ensure the label file was create by MiSleep!")
+            del hypnogram
+            return
 
 
 if __name__ == '__main__':

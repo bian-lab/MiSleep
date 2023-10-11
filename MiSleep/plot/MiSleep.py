@@ -685,15 +685,20 @@ class sleep(QMainWindow, Ui_sleep):
                int(self.start_end[0] * self.SR): int(self.start_end[1] * self.SR)]
 
         # Call spectrum dialog
-        self.spectrum_dialog.data = data
-        self.spectrum_dialog.start_end = self.start_end
-        self.spectrum_dialog.SR = self.SR
-        self.spectrum_dialog.epoch_length = self.epoch_length
-        self.spectrum_dialog.spectrum_percentile = self.spectrum_percentile
-        self.spectrum_dialog.draw()
-        self.spectrum_dialog.activateWindow()
-        self.spectrum_dialog.setWindowState(self.spectrum_dialog.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
-        self.spectrum_dialog.showNormal()
+        try:
+            self.spectrum_dialog.data = data
+            self.spectrum_dialog.start_end = self.start_end
+            self.spectrum_dialog.SR = self.SR
+            self.spectrum_dialog.epoch_length = self.epoch_length
+            self.spectrum_dialog.spectrum_percentile = self.spectrum_percentile
+            self.spectrum_dialog.draw()
+            self.spectrum_dialog.activateWindow()
+            self.spectrum_dialog.setWindowState(self.spectrum_dialog.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+            self.spectrum_dialog.showNormal()
+        except Exception as e:
+            print(e)
+            QMessageBox.about(self, "Info", "Select a larger start-end area!")
+            return
 
     def press_sleep_stage(self, event):
         """
