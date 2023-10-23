@@ -22,8 +22,8 @@ def add_hour_marker(df, ac_time):
     :return:
     """
     datetime_lst = pd.date_range(start=df['start_time'].iloc[0].replace(minute=0, second=0),
-                                 end=df['end_time'].iloc[-1].replace(hour=df['end_time'].iloc[-1].hour + 1,
-                                                                     minute=0, second=0), freq='H')
+                                 end=(df['end_time'].iloc[-1] + datetime.timedelta(hours=1)).replace(
+                                     minute=0, second=0), freq='H')
     idx_lst = 0
     temp_df = pd.DataFrame([], columns=df.columns)
     for idx_df, row in df.iterrows():
