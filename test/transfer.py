@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 """
 @Project: MiSleep 
-@File: transfer.py
+@File: tools.py
 @IDE: PyCharm 
 @Author: Xueqiang Wang
 @Date: 2023/10/7 17:06 
@@ -10,6 +10,7 @@
 import copy
 from datetime import datetime, timedelta
 import pandas as pd
+from matplotlib import pyplot as plt
 
 
 def insert_df(df, idx, df_add):
@@ -89,7 +90,7 @@ def analyze_df(df):
     return df
 
 
-label_path = r'E:\workplace\EEGProcessing\EEG script & dataset\20230922_non-shielding wires w plug & grounding\Label\20230922_scoring.txt'
+label_path = r'E:\workplace\EEGProcessing\00_DATA\20230922_non-shielding wires w plug & grounding\Label\20230922_scoring.txt'
 
 label_file = open(label_path, 'r+')
 labels = [each.replace("\n", "") for each in label_file.readlines()]
@@ -121,3 +122,26 @@ for df_name, df in group_:
 
 # writer.save()
 writer.close()
+
+# Draw hypnogram
+temp_sleep_stage_labels = [[int(each[1]), int(each[4]), int(each[6])]
+                           for each in sleep_stages]
+sleep_stage_labels = []
+for each in temp_sleep_stage_labels:
+    sleep_stage_labels += [[sec, each[2]] for sec in range(each[0], each[1] + 1)]
+total_second = len(sleep_stage_labels[:1000])
+sleep_stage_labels = sleep_stage_labels[:1000]
+
+figure = plt.figure(figsize=(30, 5))
+ax = figure.subplots(nrows=1, ncols=1)
+ax.step(range(total_second), [each[1] for each in sleep_stage_labels], where="mid", linewidth=1)
+ax.set_ylim(0.9, 3.1)
+ax.set_xlim(0, total_second - 1)
+ax.set_xticks([each for each in range(0, total_second, int(total_second / 10))],
+              [each for each in range(0, total_second, int(total_second / 10))], fontsize=15, weight='bold')
+ax.set_yticks(range(1, 4), ['NREM', 'REM', 'Wake'], fontsize=15, weight='bold')
+ax.set_xlabel("Time(Sec)", fontsize=15, weight='bold')
+ax.set_ylabel("Stage", fontsize=15, weight='bold')
+ax.set_title("Hypnogram", fontsize=15, weight='bold')
+# plt.show()
+figure.savefig("E:/hypnogram.pdf")

@@ -12,12 +12,16 @@ import datetime
 import sys
 
 from math import ceil
+
+from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox
 from hdf5storage import loadmat
 from MiSleep.gui.load_data.load_data import Ui_MiSleep
+from MiSleep.io.auto_stage import Auto_stage
 from MiSleep.plot.MiSleep import sleep
-from MiSleep.utils.utils import second2time
+from MiSleep.utils.utils import second2time, lst2group
 from MiSleep.io.tools import Transfer, Hypnogram
+import joblib
 
 
 class load_gui(QMainWindow, Ui_MiSleep):
@@ -26,6 +30,7 @@ class load_gui(QMainWindow, Ui_MiSleep):
         self.setupUi(self)
 
         self.dateTimeEdit.setDateTime(datetime.datetime.now())
+        self.ASDateTimeEditor.setDateTime(datetime.datetime.now())
 
         self.data_path = ''
         self.label_path = ''
@@ -38,6 +43,11 @@ class load_gui(QMainWindow, Ui_MiSleep):
         self.dataSelectBt.clicked.connect(self.get_data_path)
         self.labelSelectBt.clicked.connect(self.get_label_path)
 
+        self.auto_stage_data_path = None
+        self.ASdataSelectBt.clicked.connect(self.get_data_for_auto_staging)
+        self.AS_data = None
+        self.autoStagingBt.clicked.connect(self.auto_staging)
+
         self.selectFileBt.clicked.connect(self.get_label_for_transfer)
         self.transferBt.clicked.connect(self.transfer)
         self.hypnogramBt.clicked.connect(self.hypnogram)
@@ -49,6 +59,13 @@ class load_gui(QMainWindow, Ui_MiSleep):
         self.label_file = []  # Labels for saving format
         self.labels = []  # Labels format, including three part, marker label, start end label, sleep stage label
         self.data_length = 0
+
+        # Model list for auto staging
+        self.model_lst = {
+            0: 'lightGBM_1EEG_1EMG'
+        }
+
+        self.stage_type_dict = {1: 'NREM', 2: 'REM', 3: 'Wake', 4: 'INIT'}
 
     def get_data_path(self):
         """
@@ -216,6 +233,94 @@ class load_gui(QMainWindow, Ui_MiSleep):
         self.label_path, _ = QFileDialog.getOpenFileName(self, 'Select label file',
                                                          r'E:/', 'txt Files (*.txt *.TXT)')
         self.labelFileEditor.setText(self.label_path)
+
+    def get_data_for_auto_staging(self):
+        """
+        Open fileDialog for data file selection
+        :return:
+        :rtype:
+        """
+
+        self.auto_stage_data_path, _ = QFileDialog.getOpenFileName(self, 'Select data file',
+                                                                   r'E:/', 'matlab Files (*.mat *.MAT)')
+        self.dataFileEditor.setText(self.auto_stage_data_path)
+
+        if self.dataFileEditor.text() != '':
+            data = list(loadmat(self.dataFileEditor.text()).values())[-1]
+            if data.shape[0] > 20:
+                data = data.transpose()
+
+            self.AS_data = data
+
+            qList = [str(each) for each in range(1, len(data) + 1)]
+            channel_slm = QStringListModel()
+            # Set up model
+            channel_slm.setStringList(qList)
+            self.channelListView.setModel(channel_slm)
+
+    def auto_staging(self):
+        """
+        Auto staging function, use auto stage class
+        :return:
+        :rtype:
+        """
+
+        if self.dataFileEditor.text() == '':
+            # Alert warning box
+            QMessageBox.about(self, "Error", "Please select a data file!")
+            return
+
+        selected_channels = [each.row() for each in self.channelListView.selectedIndexes()]
+
+        # May need to sort selected channels
+        if len(selected_channels) != 2:
+            # Alert warning box
+            QMessageBox.about(self, "Error", "We recommend 1 EEG and 1 EMG for prediction")
+            return
+        selected_data = [self.AS_data[i] for i in selected_channels]
+        del self.AS_data
+        selected_model_name = self.model_lst[self.modelSelectorCombo.currentIndex()]
+        selected_model = joblib.load(f'../models/{selected_model_name}.pkl')
+        # Get model type according to the model name
+        model_type = selected_model_name.split('_')[0]
+
+        epoch_length = self.ASEpochLengthEditor.value()
+        SR = self.ASSREditor.value()
+
+        auto_stage = Auto_stage(data=selected_data, model=selected_model, model_type=model_type,
+                                epoch_length=epoch_length, SR=SR)
+
+        predicted_label = auto_stage.predicted_label
+        del auto_stage
+        # Expand predicted labels to per second
+        predicted_label = [each for each in predicted_label for _ in range(epoch_length)]
+        predicted_label = [[idx, value] for idx, value in enumerate(predicted_label)]
+        acquisition_time = self.ASDateTimeEditor.dateTime().toPyDateTime()
+
+        sleep_stage_labels = lst2group(predicted_label)
+        # Padding the end with INIT stage
+        if sleep_stage_labels[-1][1] != ceil(len(selected_data[0]) / SR)-1:
+            sleep_stage_labels.append([sleep_stage_labels[-1][1]+1, ceil(len(selected_data[0]) / SR)-1, 4])
+        sleep_stage_labels = [', '.join([second2time(each[0], ac_time=acquisition_time), str(each[0]), '1',
+                                         second2time(each[1], ac_time=acquisition_time), str(each[1]),
+                                         '0', str(each[2]), self.stage_type_dict[each[2]]])
+                              for each in sleep_stage_labels]
+
+        labels = ["READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM",
+                  "Save time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
+                  acquisition_time.strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(SR),
+                  "==========Marker==========" + '\n'.join([]),
+                  "==========Start-End==========" + '\n'.join([]),
+                  "==========Sleep stage==========", '\n'.join(sleep_stage_labels)]
+
+        save_path, _ = QFileDialog.getOpenFileName(self, 'Save predicted labels',
+                                                   f'{self.auto_stage_data_path.split("/")[0]}',
+                                                   'txt Files (*.txt *.TXT)')
+        if save_path == "":
+            return
+
+        with open(save_path, 'w') as f:
+            f.write('\n'.join(labels))
 
     def transfer(self):
         """

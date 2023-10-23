@@ -10,7 +10,9 @@
 
 import datetime
 from itertools import groupby
-import scipy
+
+import numpy as np
+from scipy.signal import welch
 
 
 def second2time(second, ac_time):
@@ -97,3 +99,46 @@ def get_4_stages(sleep_label_lst, data, SR):
                 Init_data[i] += list(data[i][each[0] * SR: (each[1] + 1) * SR])
 
     return NREM_data, REM_data, Wake_data, Init_data
+
+
+def get_epoch_spectrum(data, SR):
+    # lowpass the data to 70HZ
+    # fnorm = np.array(70 / (.5 * SR))
+    # b, a = butter(3, fnorm, btype='lowpass')
+    #
+    # filtered_data = signal.filtfilt(b, a, data)
+    epoch_spectrum = []
+    for each in data:
+        spectrum_F, spectrum_P = welch(each, fs=SR, nperseg=SR * 4)
+        epoch_spectrum.append([spectrum_F, spectrum_P])
+    return epoch_spectrum
+
+
+def get_ave_bands(F, P):
+    """
+    Get average band spectrum for each band
+    # Delta: 0.5~4 HZ
+    # Theta: 4~7 HZ
+    # Alpha: 7~12 HZ
+    # Beta: 12~30 HZ
+    # Gamma: 30~70 HZ
+    :param F: frequency list
+    :param P: power spectrum list
+    :return:
+    """
+
+    band_dict = {
+        'delta': [0.5, 4],
+        'theta': [4, 7],
+        'alpha': [7, 12],
+        'beta': [12, 30],
+        'gamma': [30, 70]
+    }
+
+    band_ave_power_dict = {}
+    for key, value in band_dict.items():
+        _idx = [np.where(F == value[0])[0][0], np.where(F == value[1])[0][0]]
+        band_ave_power_dict[key] = np.average(P[_idx[0]: _idx[1]])
+
+    band_ave_power = list(band_ave_power_dict.values())
+    return band_ave_power

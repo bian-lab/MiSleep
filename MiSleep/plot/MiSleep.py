@@ -9,7 +9,6 @@
 """
 import copy
 import datetime
-import time
 from math import ceil
 
 import numpy as np
@@ -99,7 +98,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.epoch_selector_dict = {0: 30, 1: 60, 2: 300, 3: 1800, 4: 3600, 5: self.epoch_length,
                                     6: 3 * self.epoch_length, 7: 5 * self.epoch_length, 8: 9 * self.epoch_length}
         self.autoScrollCheckBox.setChecked(False)  # Select auto scroll
-        self.markerRadio.setChecked(True)  # Select mark radio
+        self.startEndRadio.setChecked(True)  # Select start_end radio as default
 
         # Initialize other attributes
         self.is_saved = True  # Check whether the labels are saved into the label_file
