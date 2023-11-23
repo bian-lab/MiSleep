@@ -8,20 +8,21 @@
 @Description:  
 """
 
-import datetime
+from datetime import datetime
 import sys
 
 from math import ceil
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QColorDialog
 from hdf5storage import loadmat
 from MiSleep.gui.load_data.load_data import Ui_MiSleep
 from MiSleep.io.auto_stage import Auto_stage
 from MiSleep.plot.MiSleep import sleep
 from MiSleep.utils.utils import second2time, lst2group
 from MiSleep.io.tools import Transfer, Hypnogram
-import joblib
+from joblib import load
 
 
 class load_gui(QMainWindow, Ui_MiSleep):
@@ -29,8 +30,8 @@ class load_gui(QMainWindow, Ui_MiSleep):
         super(load_gui, self).__init__(parent)
         self.setupUi(self)
 
-        self.dateTimeEdit.setDateTime(datetime.datetime.now())
-        self.ASDateTimeEditor.setDateTime(datetime.datetime.now())
+        self.dateTimeEdit.setDateTime(datetime.now())
+        self.ASDateTimeEditor.setDateTime(datetime.now())
 
         self.data_path = ''
         self.label_path = ''
@@ -47,10 +48,15 @@ class load_gui(QMainWindow, Ui_MiSleep):
         self.ASdataSelectBt.clicked.connect(self.get_data_for_auto_staging)
         self.AS_data = None
         self.autoStagingBt.clicked.connect(self.auto_staging)
+        self.ASLoadDataBt.clicked.connect(self.load_data_for_auto_staging)
 
         self.selectFileBt.clicked.connect(self.get_label_for_transfer)
         self.transferBt.clicked.connect(self.transfer)
         self.hypnogramBt.clicked.connect(self.hypnogram)
+
+        # color pane
+        self.ToolsColorPaneBt.clicked.connect(self.select_color)
+        self.color = '#ffffff'
 
         # Press check button and check data
         self.checkBt.clicked.connect(self.check)
@@ -62,7 +68,8 @@ class load_gui(QMainWindow, Ui_MiSleep):
 
         # Model list for auto staging
         self.model_lst = {
-            0: 'lightGBM_1EEG_1EMG'
+            0: 'lightGBM_1EEG_1EMG',
+            1: 'lightGBM_1EEG_1EMG_19features'
         }
 
         self.stage_type_dict = {1: 'NREM', 2: 'REM', 3: 'Wake', 4: 'INIT'}
@@ -74,7 +81,7 @@ class load_gui(QMainWindow, Ui_MiSleep):
         """
 
         self.data_path, _ = QFileDialog.getOpenFileName(self, 'Select data file',
-                                                        r'E:/', 'Matlab Files (*.mat *.MAT)')
+                                                        r'', 'Matlab Files (*.mat *.MAT)')
         self.dataPathEdit.setText(self.data_path)
 
     def get_label_path(self):
@@ -84,7 +91,7 @@ class load_gui(QMainWindow, Ui_MiSleep):
         """
 
         self.label_path, _ = QFileDialog.getOpenFileName(self, 'Select label file',
-                                                         r'E:/', 'txt Files (*.txt *.TXT)')
+                                                         r'', 'txt Files (*.txt *.TXT)')
         self.labelPathEdit.setText(self.label_path)
 
     def check(self):
@@ -146,7 +153,7 @@ class load_gui(QMainWindow, Ui_MiSleep):
                 self.acquisition_time = self.dateTimeEdit.dateTime().toPyDateTime()
                 # Initialize the labels
                 self.label_file.append("READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM")
-                self.label_file.append("\nSave time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                self.label_file.append("\nSave time: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                 self.label_file.append("\nAcquisition time: " +
                                        self.acquisition_time.strftime("%Y-%m-%d %H:%M:%S"))
                 self.label_file.append("\nSampling rate: " + str(self.SR))
@@ -198,8 +205,8 @@ class load_gui(QMainWindow, Ui_MiSleep):
                     # self.label_path = ''
                     return
 
-                self.acquisition_time = datetime.datetime.strptime(self.label_file[3].split(": ")[1],
-                                                                   "%Y-%m-%d %H:%M:%S")
+                self.acquisition_time = datetime.strptime(self.label_file[3].split(": ")[1],
+                                                          "%Y-%m-%d %H:%M:%S")
                 self.dateTimeEdit.setDateTime(self.acquisition_time)
             f = open(self.label_path, 'r+')
             self.label_file = [each.replace("\n", "") for each in f.readlines()]
@@ -231,8 +238,8 @@ class load_gui(QMainWindow, Ui_MiSleep):
         """
 
         self.label_path, _ = QFileDialog.getOpenFileName(self, 'Select label file',
-                                                         r'E:/', 'txt Files (*.txt *.TXT)')
-        self.labelFileEditor.setText(self.label_path)
+                                                         r'', 'txt Files (*.txt *.TXT)')
+        self.ToolsLabelPathEditor.setText(self.label_path)
 
     def get_data_for_auto_staging(self):
         """
@@ -242,11 +249,23 @@ class load_gui(QMainWindow, Ui_MiSleep):
         """
 
         self.auto_stage_data_path, _ = QFileDialog.getOpenFileName(self, 'Select data file',
-                                                                   r'E:/', 'matlab Files (*.mat *.MAT)')
-        self.dataFileEditor.setText(self.auto_stage_data_path)
+                                                                   r'', 'matlab Files (*.mat *.MAT)')
+        self.ASDataPathEditor.setText(self.auto_stage_data_path)
 
-        if self.dataFileEditor.text() != '':
-            data = list(loadmat(self.dataFileEditor.text()).values())[-1]
+    def load_data_for_auto_staging(self):
+        """
+        Load data for auto staging
+        :return:
+        :rtype:
+        """
+
+        if self.ASDataPathEditor.text() == '':
+            # Alert warning box
+            QMessageBox.about(self, "Error", "Please select a data file!")
+            return
+
+        else:
+            data = list(loadmat(self.ASDataPathEditor.text()).values())[-1]
             if data.shape[0] > 20:
                 data = data.transpose()
 
@@ -256,7 +275,8 @@ class load_gui(QMainWindow, Ui_MiSleep):
             channel_slm = QStringListModel()
             # Set up model
             channel_slm.setStringList(qList)
-            self.channelListView.setModel(channel_slm)
+            self.ASEEGListView.setModel(channel_slm)
+            self.ASEMGListView.setModel(channel_slm)
 
     def auto_staging(self):
         """
@@ -265,24 +285,22 @@ class load_gui(QMainWindow, Ui_MiSleep):
         :rtype:
         """
 
-        if self.dataFileEditor.text() == '':
-            # Alert warning box
-            QMessageBox.about(self, "Error", "Please select a data file!")
-            return
-
-        selected_channels = [each.row() for each in self.channelListView.selectedIndexes()]
+        # selected_channels = [each.row() for each in self.channelListView.selectedIndexes()]
+        EEG_channel = [each.row() for each in self.ASEEGListView.selectedIndexes()]
+        EMG_channel = [each.row() for each in self.ASEMGListView.selectedIndexes()]
+        selected_channels = EEG_channel + EMG_channel
 
         # May need to sort selected channels
         if len(selected_channels) != 2:
             # Alert warning box
-            QMessageBox.about(self, "Error", "We recommend 1 EEG and 1 EMG for prediction")
+            QMessageBox.about(self, "Error", "Please load data and select 1 EEG and 1 EMG for prediction")
             return
         selected_data = [self.AS_data[i] for i in selected_channels]
         del self.AS_data
         selected_model_name = self.model_lst[self.modelSelectorCombo.currentIndex()]
-        selected_model = joblib.load(f'../models/{selected_model_name}.pkl')
+        selected_model = load(f'MiSleep/models/{selected_model_name}.pkl')
         # Get model type according to the model name
-        model_type = selected_model_name.split('_')[0]
+        model_type = selected_model_name
 
         epoch_length = self.ASEpochLengthEditor.value()
         SR = self.ASSREditor.value()
@@ -299,22 +317,22 @@ class load_gui(QMainWindow, Ui_MiSleep):
 
         sleep_stage_labels = lst2group(predicted_label)
         # Padding the end with INIT stage
-        if sleep_stage_labels[-1][1] != ceil(len(selected_data[0]) / SR)-1:
-            sleep_stage_labels.append([sleep_stage_labels[-1][1]+1, ceil(len(selected_data[0]) / SR)-1, 4])
+        if sleep_stage_labels[-1][1] != ceil(len(selected_data[0]) / SR) - 1:
+            sleep_stage_labels.append([sleep_stage_labels[-1][1] + 1, ceil(len(selected_data[0]) / SR) - 1, 4])
         sleep_stage_labels = [', '.join([second2time(each[0], ac_time=acquisition_time), str(each[0]), '1',
                                          second2time(each[1], ac_time=acquisition_time), str(each[1]),
                                          '0', str(each[2]), self.stage_type_dict[each[2]]])
                               for each in sleep_stage_labels]
 
         labels = ["READ ONLY! DO NOT EDIT!\n4-INIT 3-Wake 2-REM 1-NREM",
-                  "Save time: " + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
+                  "Save time: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Acquisition time: " +
                   acquisition_time.strftime("%Y-%m-%d %H:%M:%S"), "Sampling rate: " + str(SR),
                   "==========Marker==========" + '\n'.join([]),
                   "==========Start-End==========" + '\n'.join([]),
                   "==========Sleep stage==========", '\n'.join(sleep_stage_labels)]
 
         save_path, _ = QFileDialog.getOpenFileName(self, 'Save predicted labels',
-                                                   f'{self.auto_stage_data_path.split("/")[0]}',
+                                                   f'',
                                                    'txt Files (*.txt *.TXT)')
         if save_path == "":
             return
@@ -322,22 +340,26 @@ class load_gui(QMainWindow, Ui_MiSleep):
         with open(save_path, 'w') as f:
             f.write('\n'.join(labels))
 
+        # self.ASDataPathEditor.setText("")
+        self.ASEEGListView.setModel(QStringListModel([]))
+        self.ASEMGListView.setModel(QStringListModel([]))
+
     def transfer(self):
         """
         Transfer bar, use transfer class
         :return:
         """
 
-        if self.labelFileEditor.text() == '':
+        if self.ToolsLabelPathEditor.text() == '':
             # Alert warning box
             QMessageBox.about(self, "Error", "Please select a label file!")
             return
-        label_file_path = self.labelFileEditor.text()
+        label_file_path = self.ToolsLabelPathEditor.text()
         transfer = Transfer(label_file_path=label_file_path)
         try:
             transfer.get_params()
             fd, type_ = QFileDialog.getSaveFileName(self, "Save results",
-                                                    'E:/transfer_results', "*.xlsx;;")
+                                                    'transfer_results', "*.xlsx;;")
             if fd == '':
                 del transfer
                 return
@@ -357,14 +379,11 @@ class load_gui(QMainWindow, Ui_MiSleep):
         :return:
         """
 
-        if self.labelFileEditor.text() == '':
+        if self.ToolsLabelPathEditor.text() == '':
             # Alert warning box
             QMessageBox.about(self, "Error", "Please select a label file!")
             return
 
-        color_map = {0: 'blue', 1: 'red', 2: 'purple', 3: 'orange', 4: 'green', 5: 'yellow'}
-        # Get params from GUI
-        line_color = color_map[self.colorSelector.currentIndex()]
         start_sec = self.startSecEditor.value()
         end_sec = self.endSecEditor.value()
 
@@ -373,14 +392,14 @@ class load_gui(QMainWindow, Ui_MiSleep):
             QMessageBox.about(self, "Warning", "Hypnogram time duration should be 100 seconds at least!")
             return
         title = self.titleEditor.text()
-        label_file_path = self.labelFileEditor.text()
+        label_file_path = self.ToolsLabelPathEditor.text()
 
-        hypnogram = Hypnogram(label_file_path=label_file_path, line_color=line_color, start_sec=start_sec,
+        hypnogram = Hypnogram(label_file_path=label_file_path, line_color=self.color, start_sec=start_sec,
                               end_sec=end_sec, title=title)
         try:
             hypnogram.get_params()
             fd, type_ = QFileDialog.getSaveFileName(self, "Save hypnogram",
-                                                    f'E:/{title}', "*.png;;*.pdf;;*.eps;;")
+                                                    f'{title}', "*.png;;*.pdf;;*.eps;;")
             if fd == '':
                 del hypnogram
                 return
@@ -392,6 +411,13 @@ class load_gui(QMainWindow, Ui_MiSleep):
             QMessageBox.about(self, "Error", "Invalid label file, please ensure the label file was create by MiSleep!")
             del hypnogram
             return
+
+    def select_color(self):
+        c = QColorDialog.getColor(initial=QColor(255, 170, 255))
+        self.color = c.name()
+        if self.color == '#000000':
+            self.color = '#ffaaff'
+        self.ToolsColorPaneBt.setText(self.color)
 
 
 if __name__ == '__main__':

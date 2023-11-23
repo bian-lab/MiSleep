@@ -27,7 +27,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="0" colspan="2">
-     <widget class="QTabWidget" name="Hypnogram">
+     <widget class="QTabWidget" name="MiSleep_bars">
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -69,61 +69,6 @@
            <property name="bottomMargin">
             <number>50</number>
            </property>
-           <item row="17" column="0" colspan="4">
-            <widget class="QPushButton" name="checkBt">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Channel Data</string>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Number of channel: </string>
-             </property>
-            </widget>
-           </item>
-           <item row="15" column="0">
-            <widget class="QPushButton" name="labelSelectBt">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Set/Select label file</string>
-             </property>
-            </widget>
-           </item>
            <item row="11" column="1">
             <widget class="QSpinBox" name="channelNumEdit">
              <property name="minimumSize">
@@ -146,38 +91,8 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="SRLabel">
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Sampling rate(HZ):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="EpochLengthLabel">
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Epoch length(Sec):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="0">
-            <widget class="QPushButton" name="dataSelectBt">
+           <item row="17" column="0" colspan="4">
+            <widget class="QPushButton" name="checkBt">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -193,7 +108,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Select data file</string>
+              <string>Channel Data</string>
              </property>
             </widget>
            </item>
@@ -225,62 +140,6 @@
              </property>
              <property name="value">
               <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="1">
-            <widget class="QSpinBox" name="SREdit">
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-             <property name="value">
-              <number>305</number>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="0">
-            <widget class="QLabel" name="label">
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Time acquisition: </string>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="1" colspan="3">
-            <widget class="QLineEdit" name="dataPathEdit">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Microsoft JhengHei UI</family>
-               <pointsize>12</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -340,6 +199,100 @@
              </property>
             </widget>
            </item>
+           <item row="9" column="1">
+            <widget class="QSpinBox" name="SREdit">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="value">
+              <number>305</number>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="SRLabel">
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Sampling rate(HZ):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="EpochLengthLabel">
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Epoch length(Sec):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1" colspan="3">
+            <widget class="QLineEdit" name="dataPathEdit">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="0">
+            <widget class="QPushButton" name="labelSelectBt">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Set/Select label file</string>
+             </property>
+            </widget>
+           </item>
            <item row="10" column="2" rowspan="2" colspan="2">
             <widget class="QLabel" name="label_3">
              <property name="autoFillBackground">
@@ -353,21 +306,68 @@
              </property>
             </widget>
            </item>
-           <item row="18" column="0" colspan="4">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+              </font>
              </property>
-             <property name="sizeHint" stdset="0">
+             <property name="text">
+              <string>Number of channel: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label">
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Time acquisition: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QPushButton" name="dataSelectBt">
+             <property name="minimumSize">
               <size>
-               <width>20</width>
+               <width>0</width>
                <height>40</height>
               </size>
              </property>
-            </spacer>
+             <property name="font">
+              <font>
+               <family>Microsoft JhengHei UI</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Select data file</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
+        </item>
+        <item row="1" column="0">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -376,46 +376,21 @@
         <string>Auto stage</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="1" column="8">
-         <widget class="QDateTimeEdit" name="ASDateTimeEditor">
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei UI</family>
-            <pointsize>12</pointsize>
-           </font>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-          <property name="displayFormat">
-           <string>yyyy/MM/dd HH:mm:ss</string>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
           </property>
-         </widget>
+         </spacer>
         </item>
-        <item row="0" column="0" colspan="8">
-         <widget class="QLineEdit" name="dataFileEditor">
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei UI</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="7">
-         <widget class="QComboBox" name="modelSelectorCombo">
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei UI</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <item>
-           <property name="text">
-            <string>LightGBM_1EEG_1EMG</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLabel" name="label_9">
+        <item row="6" column="0" colspan="10">
+         <widget class="QPushButton" name="autoStagingBt">
           <property name="font">
            <font>
             <family>Microsoft JhengHei UI</family>
@@ -423,7 +398,30 @@
            </font>
           </property>
           <property name="text">
-           <string>Epoch length:</string>
+           <string>Auto staging</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>EEG:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="9">
+         <widget class="QLineEdit" name="ASDataPathEditor">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
           </property>
          </widget>
         </item>
@@ -440,27 +438,8 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="8">
-         <widget class="QPushButton" name="ASdataSelectBt">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei UI</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Select data</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="9">
-         <widget class="QListView" name="channelListView">
+        <item row="5" column="0" colspan="6">
+         <widget class="QListView" name="ASEEGListView">
           <property name="font">
            <font>
             <family>Microsoft JhengHei UI</family>
@@ -468,7 +447,101 @@
            </font>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::MultiSelection</enum>
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="flow">
+           <enum>QListView::TopToBottom</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="5">
+         <widget class="QSpinBox" name="ASEpochLengthEditor">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="minimum">
+           <number>5</number>
+          </property>
+          <property name="maximum">
+           <number>30</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" colspan="10">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="7">
+         <widget class="QLabel" name="label_10">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Time acquisition:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" colspan="8">
+         <widget class="QComboBox" name="modelSelectorCombo">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <item>
+           <property name="text">
+            <string>LightGBM_1EEG_1EMG</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>LightGBM_1EEG_1EMG_19features</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="4" column="6">
+         <widget class="QLabel" name="label_12">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>EMG:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="9">
+         <widget class="QDateTimeEdit" name="ASDateTimeEditor">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="displayFormat">
+           <string>yyyy/MM/dd HH:mm:ss</string>
           </property>
          </widget>
         </item>
@@ -491,51 +564,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="4">
-         <widget class="QSpinBox" name="ASEpochLengthEditor">
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei UI</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="minimum">
-           <number>5</number>
-          </property>
-          <property name="maximum">
-           <number>30</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="4" column="0" colspan="9">
-         <widget class="QPushButton" name="autoStagingBt">
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei UI</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Auto staging</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_8">
           <property name="font">
@@ -549,8 +577,49 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <spacer name="horizontalSpacer">
+        <item row="0" column="9">
+         <widget class="QPushButton" name="ASdataSelectBt">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Select data</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLabel" name="label_9">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Epoch length:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="6" colspan="4">
+         <widget class="QListView" name="ASEMGListView">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6">
+         <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -562,8 +631,8 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="6">
-         <widget class="QLabel" name="label_10">
+        <item row="2" column="9">
+         <widget class="QPushButton" name="ASLoadDataBt">
           <property name="font">
            <font>
             <family>Microsoft JhengHei UI</family>
@@ -571,22 +640,9 @@
            </font>
           </property>
           <property name="text">
-           <string>Time acquisition:</string>
+           <string>Load data</string>
           </property>
          </widget>
-        </item>
-        <item row="5" column="0" colspan="9">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -598,19 +654,6 @@
         <property name="verticalSpacing">
          <number>20</number>
         </property>
-        <item row="3" column="0" colspan="2">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="selectFileBt">
           <property name="minimumSize">
@@ -627,6 +670,19 @@
           </property>
           <property name="text">
            <string>Select a label file</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="ToolsLabelPathEditor">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei Light</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -718,46 +774,6 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="colorSelector">
-             <property name="minimumSize">
-              <size>
-               <width>100</width>
-               <height>0</height>
-              </size>
-             </property>
-             <item>
-              <property name="text">
-               <string>Blue</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Red</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Purple</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Orange</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Green</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Yellow</string>
-              </property>
-             </item>
-            </widget>
-           </item>
            <item row="0" column="6">
             <widget class="QLabel" name="label_4">
              <property name="font">
@@ -798,6 +814,19 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="ToolsColorPaneBt">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>#ffaaff</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -814,18 +843,18 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLineEdit" name="labelFileEditor">
-          <property name="font">
-           <font>
-            <family>Microsoft JhengHei Light</family>
-            <pointsize>12</pointsize>
-           </font>
+        <item row="3" column="0" colspan="2">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <property name="readOnly">
-           <bool>true</bool>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-         </widget>
+         </spacer>
         </item>
        </layout>
       </widget>

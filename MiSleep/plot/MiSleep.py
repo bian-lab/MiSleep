@@ -63,6 +63,7 @@ class sleep(QMainWindow, Ui_sleep):
 
         # Receive the data passed in
         self.data = data
+        del data
         self.label_file = label_file
         # Three types of label, convert labels to manipulation format, mainly the time format
         # Change the sleep_stage_labels to sec-label format, saving the time for labeling
@@ -116,7 +117,8 @@ class sleep(QMainWindow, Ui_sleep):
         # Current window size
         self.x_window_size_sec = self.epoch_selector_dict[self.epochSelector.currentIndex()]
         self.x_window_size = int(self.x_window_size_sec * self.SR)  # Current window size of sampling points
-        self.y_lims = [max(self.data[each][:30]) for each in range(self.channel_num)]  # y-axis lim of each channel data
+        self.y_lims = [[-max(self.data[each][:30]), max(self.data[each][:30])] for each in
+                       range(self.channel_num)]  # y-axis lim of each channel data
 
         # Initialize signalArea figure
         self.signal_figure = plt.figure()
@@ -265,6 +267,14 @@ class sleep(QMainWindow, Ui_sleep):
         # If channel list name is edited, update the channel list
         self.channel_slm.dataChanged.connect(self.update_channel_names)
 
+        # shift up and down
+        # self.shiftUpBt.clicked.connect(self.shift_up_y)
+        # self.shiftDownBt.clicked.connect(self.shift_down_y)
+
+        # next epoch or previous epoch
+        self.nextEpochBt.clicked.connect(self.update_next_epoch)
+        self.previousEpochBt.clicked.connect(self.update_previous_epoch)
+
     def window_plot(self, redraw_spectrum=False):
         """
         Main function, MiSleep and update all the figures
@@ -293,10 +303,10 @@ class sleep(QMainWindow, Ui_sleep):
         # get sleep stage
         if self.position_sec == 0:
             sleep_labels = lst2group(
-                self.sleep_stage_labels[self.position_sec: self.position_sec+self.x_window_size_sec+2])
+                self.sleep_stage_labels[self.position_sec: self.position_sec + self.x_window_size_sec + 2])
         else:
             sleep_labels = lst2group(
-                self.sleep_stage_labels[self.position_sec-1: self.position_sec + self.x_window_size_sec + 2])
+                self.sleep_stage_labels[self.position_sec - 1: self.position_sec + self.x_window_size_sec + 2])
 
         show_sleep_label = []
         for each in sleep_labels:
@@ -361,17 +371,20 @@ class sleep(QMainWindow, Ui_sleep):
             for each in show_sleep_label:
                 self.signal_ax[i].axvline(each[0], color='orange', alpha=0.3)
 
-            self.signal_ax[i].set_ylim(ymin=-self.y_lims[self.channel_show[i - 1]],
-                                       ymax=self.y_lims[self.channel_show[i - 1]])
+            self.signal_ax[i].set_ylim(ymin=self.y_lims[self.channel_show[i - 1]][0],
+                                       ymax=self.y_lims[self.channel_show[i - 1]][1])
             self.signal_ax[i].set_xlim(xmin=position, xmax=position + self.x_window_size)
             self.signal_ax[i].plot(x, y, color='black', linewidth=0.5)
 
             self.signal_ax[i].xaxis.set_ticks([])
             # self.signal_ax[i].yaxis.set_ticks([0], [self.channel_list[self.channel_show[i]]])
             # self.signal_ax[i].ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
-            self.signal_ax[i].yaxis.set_ticks([0], ['{:.2e}'.format(self.y_lims[self.channel_show[i - 1]])],
+            self.signal_ax[i].yaxis.set_ticks([0], ['{:.2e}'.format(
+                (self.y_lims[self.channel_show[i - 1]][1] - self.y_lims[self.channel_show[i - 1]][0]) / 2)],
                                               rotation=90)
             self.signal_ax[i].set_ylabel(self.channel_list[self.channel_show[i - 1]])
+
+            # self.signal_ax[i].spines['bottom'].set_position(('data', 0.1))
 
             # Add axvline of each epoch
             if len(x) < self.SR * 300:
@@ -382,23 +395,23 @@ class sleep(QMainWindow, Ui_sleep):
         # Add annotation of each axvline (except epoch line)
         for each in show_labels_mark:
             self.signal_ax[1].text(x=each[0] * self.SR,
-                                   y=self.y_lims[self.channel_show[0]],
+                                   y=self.y_lims[self.channel_show[0]][1],
                                    s=each[1],
                                    verticalalignment="top",
                                    color='red')
         for each in show_labels_start_end:
             self.signal_ax[1].text(x=each[0] * self.SR,
-                                   y=self.y_lims[self.channel_show[0]],
+                                   y=self.y_lims[self.channel_show[0]][1],
                                    s=each[1],
                                    verticalalignment="top",
                                    color='dodgerblue')
         if self.start_end and self.start_end[0] * self.SR in x:
             self.signal_ax[-1].text(x=self.start_end[0] * self.SR,
-                                    y=-self.y_lims[self.channel_show[-1]],
+                                    y=-self.y_lims[self.channel_show[-1]][1],
                                     s="S", color='lime')
         if len(self.start_end) == 2 and self.start_end[1] * self.SR - 1 in x:
             self.signal_ax[-1].text(x=self.start_end[1] * self.SR,
-                                    y=-self.y_lims[self.channel_show[-1]],
+                                    y=-self.y_lims[self.channel_show[-1]][1],
                                     s="E",
                                     horizontalalignment="right",
                                     color='lime')
@@ -406,13 +419,34 @@ class sleep(QMainWindow, Ui_sleep):
         # Add annotation for sleep stage
         # Only add annotation but no axvline on the bottom of last figure
         for each in show_sleep_label:
-            self.signal_ax[-1].text(
-                x=each[0],
-                y=-self.y_lims[self.channel_show[-1]],
-                s=each[1],
-                horizontalalignment=each[2],
-                color='orange')
-
+            if each[1].endswith("NREM"):
+                self.signal_ax[-1].text(
+                    x=each[0],
+                    y=-self.y_lims[self.channel_show[-1]][1],
+                    s=each[1],
+                    horizontalalignment=each[2],
+                    color='orange')
+            elif each[1].endswith("REM"):
+                self.signal_ax[-1].text(
+                    x=each[0],
+                    y=-self.y_lims[self.channel_show[-1]][1],
+                    s=each[1],
+                    horizontalalignment=each[2],
+                    color='skyblue')
+            elif each[1].endswith("Wake"):
+                self.signal_ax[-1].text(
+                    x=each[0],
+                    y=-self.y_lims[self.channel_show[-1]][1],
+                    s=each[1],
+                    horizontalalignment=each[2],
+                    color='red')
+            elif each[1].endswith("INIT"):
+                self.signal_ax[-1].text(
+                    x=each[0],
+                    y=-self.y_lims[self.channel_show[-1]][1],
+                    s=each[1],
+                    horizontalalignment=each[2],
+                    color='black')
         # Set xtick for the last figure, because all the figures share the same x-axis
         if len(x) < self.SR * 450:
 
@@ -692,7 +726,8 @@ class sleep(QMainWindow, Ui_sleep):
             self.spectrum_dialog.spectrum_percentile = self.spectrum_percentile
             self.spectrum_dialog.draw()
             self.spectrum_dialog.activateWindow()
-            self.spectrum_dialog.setWindowState(self.spectrum_dialog.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+            self.spectrum_dialog.setWindowState(
+                self.spectrum_dialog.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
             self.spectrum_dialog.showNormal()
         except Exception as e:
             print(e)
@@ -718,7 +753,7 @@ class sleep(QMainWindow, Ui_sleep):
         if len(selected_channel) == 0:
             QMessageBox.about(self, "Info", "Please select at least one channel to reduction!")
             return
-        self.y_lims = [self.y_lims[each] * 1.1 if each in selected_channel else self.y_lims[each]
+        self.y_lims = [[l * 1.1 for l in self.y_lims[each]] if each in selected_channel else self.y_lims[each]
                        for each in range(self.channel_num)]
         self.window_plot()
 
@@ -727,8 +762,42 @@ class sleep(QMainWindow, Ui_sleep):
         if len(selected_channel) == 0:
             QMessageBox.about(self, "Info", "Please select at least one channel to amplify!")
             return
-        self.y_lims = [self.y_lims[each] * 0.9 if each in selected_channel else self.y_lims[each]
+        self.y_lims = [[l * 0.9 for l in self.y_lims[each]] if each in selected_channel else self.y_lims[each]
                        for each in range(self.channel_num)]
+        self.window_plot()
+
+    def shift_up_y(self):
+        """
+        shift up selected signal
+        :return:
+        :rtype:
+        """
+
+        selected_channel = [each.row() for each in self.channelList.selectedIndexes()]
+        if len(selected_channel) == 0:
+            QMessageBox.about(self, "Info", "Please select at least one channel to shift up!")
+            return
+        self.y_lims = [
+            [l - max(self.data[each][:30]) * 0.05 for l in self.y_lims[each]] if each in selected_channel else
+            self.y_lims[each]
+            for each in range(self.channel_num)]
+        self.window_plot()
+
+    def shift_down_y(self):
+        """
+        shift down selected signal
+        :return:
+        :rtype:
+        """
+
+        selected_channel = [each.row() for each in self.channelList.selectedIndexes()]
+        if len(selected_channel) == 0:
+            QMessageBox.about(self, "Info", "Please select at least one channel to shift up!")
+            return
+        self.y_lims = [
+            [l + max(self.data[each][:30]) * 0.05 for l in self.y_lims[each]] if each in selected_channel else
+            self.y_lims[each]
+            for each in range(self.channel_num)]
         self.window_plot()
 
     def label_start_end(self):
@@ -789,6 +858,24 @@ class sleep(QMainWindow, Ui_sleep):
 
         self.spectrum_percentile = self.spectrumPercentileEdit.value()
         self.window_plot(redraw_spectrum=True)
+
+    def update_next_epoch(self):
+        """
+        Next window
+        :return:
+        """
+
+        position_sec = self.position_sec + self.epoch_length
+        self.position_sec_redraw(position_sec=position_sec)
+
+    def update_previous_epoch(self):
+        """
+        Previous window
+        :return:
+        """
+
+        position_sec = self.position_sec - self.epoch_length
+        self.position_sec_redraw(position_sec=position_sec)
 
     def update_next_position(self):
         """
@@ -969,7 +1056,7 @@ class sleep(QMainWindow, Ui_sleep):
             # Add a channel for filtered data
             self.channel_list.append(self.channel_list[selected_channel[0]] + '_' + name)
             self.channel_num += 1
-            self.y_lims.append(max(filtered_data[:30]))
+            self.y_lims.append([max(filtered_data[:30]), -max(filtered_data[:30])])
             self.channel_show.append(len(self.channel_list) - 1)
 
             # Merge the filtered data into the entire data list
@@ -1190,7 +1277,7 @@ class sleep(QMainWindow, Ui_sleep):
 
             save_data = [self.data[idx] for idx in selected_channel]
 
-        fd, type_ = QFileDialog.getSaveFileName(self, "Save data", "E:/SelectedData", "*.mat;;*.MAT;;")
+        fd, type_ = QFileDialog.getSaveFileName(self, "Save data", "SelectedData", "*.mat;;*.MAT;;")
         if fd == '':
             return
         scipy.io.savemat(fd, mdict={'data': save_data})
@@ -1239,7 +1326,7 @@ class sleep(QMainWindow, Ui_sleep):
                   "==========Sleep stage=========="]
 
         # Get file path
-        path_ = QFileDialog.getExistingDirectory(self, "Select a folder to save 4 stages' data", "E:/")
+        path_ = QFileDialog.getExistingDirectory(self, "Select a folder to save 4 stages' data", "")
         if path_ == '':
             self.setDisabled(False)
             return
@@ -1485,7 +1572,11 @@ class spectrum_dialog(QDialog, Ui_spectrum):
         self.spectrum_ax.grid(which="minor", alpha=0.3)
 
         self.spectrum_ax.set_xlim(0, 50)
+        # self.spectrum_ax.set_ylim()
         self.spectrum_ax.plot(self.spectrum_F, self.spectrum_P)
+        # Find intersecting values in frequency vector
+        # idx_delta = np.logical_and(self.spectrum_F >= 0.5, self.spectrum_F <= 4)
+        # self.spectrum_ax.fill_between(self.spectrum_F, self.spectrum_P, where=idx_delta, color='skyblue')
         self.spectrum_ax.set_xlabel("Frequency (Hz)")
         self.spectrum_ax.set_ylabel("Power spectral density (Power/Hz)")
 
@@ -1520,7 +1611,7 @@ class spectrum_dialog(QDialog, Ui_spectrum):
 
         # save spectrum
         fd, type_ = QFileDialog.getSaveFileName(self, "Save figure and data",
-                                                'E:/spectrum_' + str(self.start_end[0]) + '_'
+                                                'spectrum_' + str(self.start_end[0]) + '_'
                                                 + str(self.start_end[1]), "*.eps;;*.png;;*.tif;;*.pdf;;")
         if fd == '':
             return
@@ -1546,7 +1637,7 @@ class spectrum_dialog(QDialog, Ui_spectrum):
 
         # save spectrum
         fd, type_ = QFileDialog.getSaveFileName(self, "Save figure and data",
-                                                'E:/time_frequency_' + str(self.start_end[0]) + '_'
+                                                'time_frequency_' + str(self.start_end[0]) + '_'
                                                 + str(self.start_end[1]), "*.png;;*.tif;;*.pdf;;*.eps;;")
         if fd == '':
             return

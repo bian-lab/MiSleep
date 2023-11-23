@@ -8,11 +8,12 @@
 @Description:  Auto stage with models
 """
 import copy
+from scipy.stats import skew, kurtosis
 
-import antropy
+# import antropy
 import numpy as np
 import pandas as pd
-from scipy.stats import stats
+from misleeputils import get_artifacts, z_score_norm, get_frequency_features, num_zerocross, perm_entropy, hjorth_params
 import joblib
 
 from MiSleep.utils.utils import get_epoch_spectrum, get_ave_bands
@@ -62,8 +63,10 @@ class Auto_stage:
 
         self.predicted_label = []
 
-        if self.model_type == "lightGBM":
+        if self.model_type == "lightGBM_1EEG_1EMG":
             self.lightGBM_model()
+        elif self.model_type == "lightGBM_1EEG_1EMG_19features":
+            self.lightGBM_model_2()
 
     def construct_epoch_data(self):
         self.epoch_EEG = [self.EEG[i:i + self.epoch_length * self.SR] for i in
@@ -93,11 +96,11 @@ class Auto_stage:
             lambda x: (x - np.min(x)) / (np.max(x) - np.min(x)))
 
         # Calculate only for EEG
-        epoch_features_df['EEG_skewness'] = [stats.skew(each) for each in self.epoch_EEG]
-        epoch_features_df['EEG_kurtosis'] = [stats.kurtosis(each) for each in self.epoch_EEG]
+        epoch_features_df['EEG_skewness'] = [skew(each) for each in self.epoch_EEG]
+        epoch_features_df['EEG_kurtosis'] = [kurtosis(each) for each in self.epoch_EEG]
 
-        epoch_features_df['EMG_skewness'] = [stats.skew(each) for each in self.epoch_EMG]
-        epoch_features_df['EMG_kurtosis'] = [stats.kurtosis(each) for each in self.epoch_EMG]
+        epoch_features_df['EMG_skewness'] = [skew(each) for each in self.epoch_EMG]
+        epoch_features_df['EMG_kurtosis'] = [kurtosis(each) for each in self.epoch_EMG]
 
         # normalize skewness and kurtosis
         epoch_features_df[['EEG_skewness_norm', 'EEG_kurtosis_norm', 'EMG_skewness_norm', 'EMG_kurtosis_norm']] = \
@@ -105,18 +108,18 @@ class Auto_stage:
                 lambda x: (x - np.min(x)) / (np.max(x) - np.min(x)))
 
         # Rate of zero cross
-        epoch_features_df['EEG_rate_zerocross'] = [antropy.num_zerocross(each) / (self.epoch_length * self.SR) for each
+        epoch_features_df['EEG_rate_zerocross'] = [num_zerocross(each) / (self.epoch_length * self.SR) for each
                                                    in self.epoch_EEG]
-        epoch_features_df['EMG_rate_zerocross'] = [antropy.num_zerocross(each) / (self.epoch_length * self.SR) for each
+        epoch_features_df['EMG_rate_zerocross'] = [num_zerocross(each) / (self.epoch_length * self.SR) for each
                                                    in self.epoch_EMG]
 
         # Hjorth mobility and complexity
-        epoch_features_df[['EEG_Hjorth_M', 'EEG_Hjorth_C']] = [antropy.hjorth_params(each) for each in self.epoch_EEG]
-        epoch_features_df[['EMG_Hjorth_M', 'EMG_Hjorth_C']] = [antropy.hjorth_params(each) for each in self.epoch_EMG]
+        epoch_features_df[['EEG_Hjorth_M', 'EEG_Hjorth_C']] = [hjorth_params(each) for each in self.epoch_EEG]
+        epoch_features_df[['EMG_Hjorth_M', 'EMG_Hjorth_C']] = [hjorth_params(each) for each in self.epoch_EMG]
 
         # Permutation entropy
-        epoch_features_df['EEG_perm_entropy'] = [antropy.perm_entropy(each) for each in self.epoch_EEG]
-        epoch_features_df['EMG_perm_entropy'] = [antropy.perm_entropy(each) for each in self.epoch_EMG]
+        epoch_features_df['EEG_perm_entropy'] = [perm_entropy(each) for each in self.epoch_EEG]
+        epoch_features_df['EMG_perm_entropy'] = [perm_entropy(each) for each in self.epoch_EMG]
 
         # Frequency features for EEG
         epoch_eeg_spectrum = get_epoch_spectrum(data=self.epoch_EEG, SR=self.SR)
@@ -135,6 +138,76 @@ class Auto_stage:
              'EMG_perm_entropy', 'EEG_delta', 'EEG_theta', 'EEG_alpha', 'EEG_beta', 'EEG_gamma',
              'EEG_alpha_theta', 'EEG_delta_beta', 'EEG_delta_theta']]
 
+    def lightGBM_model_2(self):
+        """
+        From analysis_ipynb feature_extraction_lightGBM
+        :return:
+        :rtype:
+        """
+
+        X = [self.epoch_EEG, self.epoch_EMG]
+
+        # Get artifacts index
+        EEG_artifacts_idx = get_artifacts(X[0], threshold=5)
+        EMG_artifacts_idx = get_artifacts(X[1], threshold=5)
+        artifacts_idx = np.array(list(set(EEG_artifacts_idx + EMG_artifacts_idx)))
+
+        # Set the artifacts label to init
+        # original_Y = []
+        # original_Y = [each if each not in artifacts_idx else 4 for idx, each in enumerate(test_Y_1)]
+
+        # Normalization data
+        # Remove artifact data and labels
+        X = np.array([[each for idx, each in enumerate(X[0]) if idx not in artifacts_idx],
+                      [each for idx, each in enumerate(X[1]) if idx not in artifacts_idx]])
+
+        # test_Y_1 = np.array([each for idx, each in enumerate(test_Y_1) if idx not in artifacts_idx])
+        EEG_data_norm = z_score_norm(X[0].flatten())
+        EMG_data_norm = z_score_norm(X[1].flatten())
+        X = np.array(
+            [[EEG_data_norm[i:i + self.epoch_length * self.SR] for i in
+              range(0, len(EEG_data_norm), self.epoch_length * self.SR)],
+             [EMG_data_norm[i:i + self.epoch_length * self.SR] for i in
+              range(0, len(EMG_data_norm), self.epoch_length * self.SR)]])
+
+        X = np.concatenate((X[0], X[1]), axis=0).reshape(
+            (X.shape[1], X.shape[0], X.shape[2]), order="F")
+
+        del EEG_data_norm
+        del EMG_data_norm
+
+        eeg_time_features = np.array([np.array(
+            [np.std(each[0]), skew(each[0]), kurtosis(each[0]), num_zerocross(each[0]),
+             perm_entropy(each[0])] + get_frequency_features(each[0])) for each in X])
+        emg_time_features = np.array([np.array(
+            [np.std(each[1]), skew(each[1]), kurtosis(each[1]), num_zerocross(each[1]),
+             perm_entropy(each[1])]) for each in X])
+        features = np.concatenate((eeg_time_features, emg_time_features), axis=1)
+        del X
+        del eeg_time_features
+        del emg_time_features
+
+        gbm_model = self.model
+
+        y_pred = gbm_model.predict(features, num_iteration=gbm_model.best_iteration_)
+
+        y_prob = gbm_model.predict_proba(features)
+
+        REM_trans_threshold = 0.05
+        WAKE_trans_threshold = 0.82
+        NREM_trans_threshold = 0.7
+        REM_threshold = 0.29
+
+        y_label_prob = constrains(y_prob, copy.deepcopy(y_pred), NREM_trans_threshold,
+                                  REM_trans_threshold, WAKE_trans_threshold, REM_threshold)
+
+        for each in sorted(artifacts_idx):
+            y_label_prob = np.insert(y_label_prob, each, 4)
+
+        self.predicted_label = y_label_prob
+
+        # self.predicted_label = y_pred
+
     def lightGBM_model(self):
         """
         Use lightGBM model for prediction
@@ -147,7 +220,11 @@ class Auto_stage:
         X = self.epoch_features_df.drop('epoch', axis=1)
         del self.epoch_features_df
         # Do feature mining first
-        chi_model = joblib.load('../models/chi_model.pkl')
+        # chi_model = joblib.load('MiSleep/models/chi_model.pkl')
+
+        # Debug use this path
+        chi_model = joblib.load(r'MiSleep\models\chi_model.pkl')
+
         X_chi_5 = chi_model.transform(X)
 
         X = pd.DataFrame(X_chi_5)
@@ -166,3 +243,4 @@ class Auto_stage:
                                   REM_trans_threshold, WAKE_trans_threshold, REM_threshold)
 
         self.predicted_label = y_label_prob
+        # self.predicted_label = y_pred

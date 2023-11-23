@@ -12,6 +12,24 @@ import datetime
 
 import pandas as pd
 import matplotlib.pyplot as plt
+pd.options.mode.chained_assignment = None
+
+
+def insert_row(df, idx, row):
+    """
+    Insert a row in the specific index "idx" for df
+    :param df:
+    :type df:
+    :param idx:
+    :type idx:
+    :param row:
+    :type row:
+    :return:
+    :rtype:
+    """
+    above = df[:idx]
+    below = df[idx:]
+    return pd.concat([above, row, below], axis=0)
 
 
 def add_hour_marker(df, ac_time):
@@ -21,49 +39,86 @@ def add_hour_marker(df, ac_time):
     :param ac_time:
     :return:
     """
-    datetime_lst = pd.date_range(start=df['start_time'].iloc[0].replace(minute=0, second=0),
-                                 end=(df['end_time'].iloc[-1] + datetime.timedelta(hours=1)).replace(
-                                     minute=0, second=0), freq='H')
-    idx_lst = 0
-    temp_df = pd.DataFrame([], columns=df.columns)
-    for idx_df, row in df.iterrows():
-        # insert before current line
-        if row['start_time'] > datetime_lst[idx_lst]:
-            _time = datetime_lst[idx_lst]
-            _sec = int((_time - ac_time).total_seconds())
-            _row = pd.DataFrame([[_time, _sec, 5, _time, _sec, 5, ' ', 'Marker', ' ']], columns=df.columns)
-            temp_df = pd.concat([temp_df, _row], ignore_index=True)
-            temp_df = pd.concat([temp_df, pd.DataFrame(row).T], ignore_index=True)
-            idx_lst += 1
 
-        # add a new line and insert between them, if the bout cross the hour
-        elif row['start_time'] < datetime_lst[idx_lst] < row['end_time']:
-            _time = datetime_lst[idx_lst]
-            _sec = int((_time - ac_time).total_seconds())
-            _row = pd.DataFrame([[_time, _sec, 5, _time, _sec, 5, ' ', 'Marker', ' ']], columns=df.columns)
+    date_range_df = pd.DataFrame(columns=df.columns)
+    # Construct a date range with Marker, then sort by start sec, to locate the marker position
+    date_range_df["start_time"] = pd.date_range(start=df["start_time"].iloc[0].replace(minute=0, second=0),
+                                                end=(df['end_time'].iloc[-1] + datetime.timedelta(
+                                                    hours=1)).replace(
+                                                    minute=0, second=0), freq='H')
+    date_range_df["end_time"] = date_range_df["start_time"]
+    date_range_df["start_sec"] = date_range_df["start_time"].apply(lambda x: int((x - ac_time).total_seconds()))
+    date_range_df["end_sec"] = date_range_df["end_time"].apply(lambda x: int((x - ac_time).total_seconds()))
+    date_range_df["phase_code"] = [5] * date_range_df.shape[0]
+    date_range_df["phase"] = ["Marker"] * date_range_df.shape[0]
 
-            temp_row = copy.deepcopy(row)
+    new_df = pd.concat([df, date_range_df], ignore_index=True)
+    del df
+    new_df = new_df.sort_values(["start_sec"]).reset_index(drop=True)
 
-            temp_row['end_time'] = _time
-            temp_row['end_sec'] = _sec
-            temp_df = pd.concat([temp_df, pd.DataFrame(temp_row).T], ignore_index=True)
-            temp_df = pd.concat([temp_df, _row], ignore_index=True)
 
-            temp_row = copy.deepcopy(row)
-            temp_row['start_time'] = _time
-            temp_row['start_sec'] = _sec
-            temp_df = pd.concat([temp_df, pd.DataFrame(temp_row).T], ignore_index=True)
-            idx_lst += 1
-        else:
-            temp_df = pd.concat([temp_df, pd.DataFrame(row).T], ignore_index=True)
+    # Compare the previous row with the Marker row, if the end_sec larger than the Marker row, add a row after the
+    # Marker row
+    changed = 1
+    while changed == 1:
+        changed = 0
+        for idx, row in new_df[new_df["phase"] == "Marker"].iterrows():
+            # If
+            if idx >= 1 and row["start_sec"] < new_df["end_sec"].iloc[idx - 1]:
+                # Add a new row
+                row_ = copy.deepcopy(new_df.iloc[idx - 1])
+                row_["start_time"] = row["start_time"]
+                row_["start_sec"] = row["start_sec"]
+                new_df = insert_row(new_df, idx + 1, pd.DataFrame(row_).T)
 
-    # Add last line
-    _time = datetime_lst[-1]
-    _sec = int(abs((_time - ac_time).total_seconds()))
+                # Update the previous row
+                new_df["end_sec"].iloc[idx - 1] = row["start_sec"]
+                new_df["end_time"].iloc[idx - 1] = row["start_time"]
+                changed = 1
 
-    _row = pd.DataFrame([[_time, _sec, 5, _time, _sec, 5, ' ', 'Marker', ' ']], columns=df.columns)
-    temp_df = pd.concat([temp_df, _row], ignore_index=True)
-    return temp_df
+                new_df = new_df.reset_index(drop=True)
+
+                # If inserted a row, reloop the whole
+                break
+
+    new_df['epoch_duration(s)'] = new_df.apply(lambda x: int(x[4]) - int(x[1]), axis=1)
+    return new_df
+
+def analyze_phases(hour_marker_df):
+    """
+    Use the dataframe with hour marker, analyse each phase per hour
+    :param hour_marker_df:
+    :type hour_marker_df:
+    :return: analysed dataframe, with NREM, REM, WAKE, INIT duration, bout number, ave bout duration
+    :rtype:
+    """
+    # Analyse duration and bout number for each phase
+    analyse_df = pd.DataFrame()
+    analyse_df['date_time'] = pd.date_range(start=hour_marker_df['start_time'].iloc[0],
+                                            end=hour_marker_df['end_time'].iloc[-1], freq='H')[:-1]
+    temp_df = hour_marker_df.drop(hour_marker_df[hour_marker_df['phase'] == "Marker"].index)
+    temp_df["hour_marker"] = temp_df['start_time'].apply(lambda x: x.day * 100 + x.hour)
+    features = []
+    # NREM_duration, NREM_bout, REM_duration, REM_bout, WAKE_duration, WAKE_bout, INIT_duration, INIT_bout
+    for each in temp_df.groupby('hour_marker'):
+        df = each[1]
+        temp_lst = []
+        for phase in ["NREM", "REM", "Wake", "INIT"]:
+            _duration = df[df["phase"] == phase]["epoch_duration(s)"].sum()
+            _bout = df[df["phase"] == phase]["epoch_duration(s)"].count()
+            temp_lst += [_duration, _bout, round(_duration / _bout, 2) if _bout != 0 else 0, round(_duration / 3600, 2)]
+        features.append(temp_lst)
+
+    analyse_df[['NREM_duration', 'NREM_bout', "NREM_ave", "NREM_percentage", 'REM_duration', 'REM_bout', "REM_ave",
+                "REM_percentage", 'WAKE_duration', 'WAKE_bout', "WAKE_ave", "WAKE_percentage", 'INIT_duration',
+                'INIT_bout', "INIT_ave", "INIT_percentage"]] = features
+    analyse_df[
+        ['NREM_duration', 'NREM_bout', 'REM_duration', 'REM_bout', 'WAKE_duration', 'WAKE_bout', 'INIT_duration',
+         'INIT_bout']] = analyse_df[
+        ['NREM_duration', 'NREM_bout', 'REM_duration', 'REM_bout', 'WAKE_duration', 'WAKE_bout', 'INIT_duration',
+         'INIT_bout']].astype(int)
+
+    return analyse_df
 
 
 class Transfer:
@@ -134,9 +189,11 @@ class Transfer:
 
         sleep_stages_df = add_hour_marker(self.sleep_stages_df, ac_time=self.ac_time)
 
+        analyse_df = analyze_phases(hour_marker_df=sleep_stages_df)
+
         # write into Excel
         writer = pd.ExcelWriter(save_path, datetime_format='yyyy-mm-dd hh:mm:ss')
-        sleep_stages_df.to_excel(excel_writer=writer, sheet_name='All', index=False)
+        pd.concat([sleep_stages_df, analyse_df], axis=1).to_excel(excel_writer=writer, sheet_name='All', index=False)
         for df_name, df in self.group_stages:
             _df = self.analyze_stage_df(df)
             _df.to_excel(excel_writer=writer, sheet_name=df_name, index=False)
