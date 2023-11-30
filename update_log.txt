@@ -1,0 +1,4 @@
+2023.11.30 version 1.0.1
+Fixed a bug
+Bug: when cilck in the time-frequency axes, the start vaxline will jump to the start time. 
+Solution: Pass the click_signal()  function when click the time-frequency axes by the "event.inaxes" property

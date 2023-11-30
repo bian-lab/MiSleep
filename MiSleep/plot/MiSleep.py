@@ -619,6 +619,10 @@ class sleep(QMainWindow, Ui_sleep):
         :return:
         """
 
+        # Pass if click in the time-frequency area
+        if event.inaxes == self.signal_ax[0]:
+            return
+
         # Get current second
         try:
             sec = int(event.xdata / self.SR)
