@@ -12,7 +12,7 @@ from scipy.stats import skew, kurtosis
 
 # import antropy
 import numpy as np
-import pandas as pd
+from pandas import DataFrame
 from misleeputils import get_artifacts, z_score_norm, get_frequency_features, num_zerocross, perm_entropy, hjorth_params
 import joblib
 
@@ -59,7 +59,7 @@ class Auto_stage:
         self.epoch_EEG = None
         self.epoch_EMG = None
         self.construct_epoch_data()
-        self.epoch_features_df = pd.DataFrame()
+        self.epoch_features_df = DataFrame()
 
         self.predicted_label = []
 
@@ -76,7 +76,7 @@ class Auto_stage:
 
     def extract_features(self):
         # Calculation different time feature of EEG and EMG based on epoch
-        epoch_features_df = pd.DataFrame({'epoch': range(len(self.epoch_EEG))})
+        epoch_features_df = DataFrame({'epoch': range(len(self.epoch_EEG))})
         # Standard deviation
         epoch_EEG_SD = [np.var(each) for each in self.epoch_EEG]
         epoch_EMG_SD = [np.var(each) for each in self.epoch_EMG]
@@ -227,7 +227,7 @@ class Auto_stage:
 
         X_chi_5 = chi_model.transform(X)
 
-        X = pd.DataFrame(X_chi_5)
+        X = DataFrame(X_chi_5)
 
         gbm_model = self.model
 

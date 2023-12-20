@@ -13,7 +13,7 @@ import sys
 
 from math import ceil
 
-from PyQt5.QtCore import QStringListModel
+from PyQt5.QtCore import QStringListModel, Qt, QCoreApplication
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QColorDialog
 from hdf5storage import loadmat
@@ -28,7 +28,10 @@ from joblib import load
 class load_gui(QMainWindow, Ui_MiSleep):
     def __init__(self, parent=None):
         super(load_gui, self).__init__(parent)
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+
         self.setupUi(self)
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 
         self.dateTimeEdit.setDateTime(datetime.now())
         self.ASDateTimeEditor.setDateTime(datetime.now())

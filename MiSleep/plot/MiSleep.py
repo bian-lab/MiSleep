@@ -12,15 +12,14 @@ import datetime
 from math import ceil
 
 import numpy as np
-import scipy
 from PyQt5 import QtCore
-from PyQt5.QtCore import QStringListModel, Qt, QTimer
+from PyQt5.QtCore import QStringListModel, Qt, QTimer, QCoreApplication
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog, QMessageBox, QShortcut
+from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog, QMessageBox, QShortcut, QApplication
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from scipy import signal
-from scipy.signal import butter, welch
+from scipy.signal import butter, welch, filtfilt, spectrogram
+from scipy.io import savemat
 
 from MiSleep.gui.MiSleep.labels import Ui_label
 from MiSleep.gui.MiSleep.sleep import Ui_sleep
@@ -59,7 +58,11 @@ class sleep(QMainWindow, Ui_sleep):
 
         # Initialize window and setup widgets
         super(sleep, self).__init__(parent=parent)
+
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
         self.setupUi(self)
+
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 
         # Receive the data passed in
         self.data = data
@@ -105,7 +108,7 @@ class sleep(QMainWindow, Ui_sleep):
         self.is_saved = True  # Check whether the labels are saved into the label_file
         self.channel_num = self.data.shape[0]
         self.channel_list = [str(each + 1) for each in range(self.channel_num)]  # Name of each channel in a list
-        # Channels index to be show in the signal area, can select by user
+        # Channels index to be shown in the signal area, can select by user
         self.channel_show = list(range(self.channel_num))
         self.data_show = self.data  # Which channel data to show, connect to self.channel_show
         self.sample_num = self.data.shape[1]  # Number of samples
@@ -272,8 +275,8 @@ class sleep(QMainWindow, Ui_sleep):
         # self.shiftDownBt.clicked.connect(self.shift_down_y)
 
         # next epoch or previous epoch
-        self.nextEpochBt.clicked.connect(self.update_next_epoch)
-        self.previousEpochBt.clicked.connect(self.update_previous_epoch)
+        # self.nextEpochBt.clicked.connect(self.update_next_epoch)
+        # self.previousEpochBt.clicked.connect(self.update_previous_epoch)
 
     def window_plot(self, redraw_spectrum=False):
         """
@@ -327,9 +330,9 @@ class sleep(QMainWindow, Ui_sleep):
         fnorm = np.array(30 / (.5 * self.SR))
         b, a = butter(3, fnorm, btype='lowpass')
 
-        filtered_data = signal.filtfilt(b, a,
-                                        self.data[self.default_TF_channel][position: position + self.x_window_size])
-        F, T, Sxx = signal.spectrogram(filtered_data, fs=self.SR, noverlap=0, nperseg=self.SR)
+        filtered_data = filtfilt(b, a,
+                                 self.data[self.default_TF_channel][position: position + self.x_window_size])
+        F, T, Sxx = spectrogram(filtered_data, fs=self.SR, noverlap=0, nperseg=self.SR)
         # Sxx = numpy.log(Sxx)
         cmap = plt.cm.get_cmap('jet')
 
@@ -1055,7 +1058,7 @@ class sleep(QMainWindow, Ui_sleep):
                 b, a = butter(3, fnorm, btype='bandpass')
                 name = str(low) + '~' + str(high) + '_BP'
 
-            filtered_data = signal.filtfilt(b, a, wait_data)
+            filtered_data = filtfilt(b, a, wait_data)
 
             # Add a channel for filtered data
             self.channel_list.append(self.channel_list[selected_channel[0]] + '_' + name)
@@ -1284,7 +1287,7 @@ class sleep(QMainWindow, Ui_sleep):
         fd, type_ = QFileDialog.getSaveFileName(self, "Save data", "SelectedData", "*.mat;;*.MAT;;")
         if fd == '':
             return
-        scipy.io.savemat(fd, mdict={'data': save_data})
+        savemat(fd, mdict={'data': save_data})
 
     def merge_selected_data(self, merge_all=False):
         """
@@ -1336,28 +1339,28 @@ class sleep(QMainWindow, Ui_sleep):
             return
 
         if nrem_data[0]:
-            scipy.io.savemat(path_ + "/nrem_data.mat", mdict={'data': nrem_data})
+            savemat(path_ + "/nrem_data.mat", mdict={'data': nrem_data})
             with open(path_ + "/nrem_labels.txt", 'w') as f:
                 _ = copy.deepcopy(labels)
                 _.append(nrem_labels)
                 f.write('\n'.join(_))
 
         if rem_data[0]:
-            scipy.io.savemat(path_ + "/rem_data.mat", mdict={'data': rem_data})
+            savemat(path_ + "/rem_data.mat", mdict={'data': rem_data})
             with open(path_ + "/rem_labels.txt", 'w') as f:
                 _ = copy.deepcopy(labels)
                 _.append(rem_labels)
                 f.write('\n'.join(_))
 
         if wake_data[0]:
-            scipy.io.savemat(path_ + "/wake_data.mat", mdict={'data': wake_data})
+            savemat(path_ + "/wake_data.mat", mdict={'data': wake_data})
             with open(path_ + "/wake_labels.txt", 'w') as f:
                 _ = copy.deepcopy(labels)
                 _.append(wake_labels)
                 f.write('\n'.join(_))
 
         if init_data[0]:
-            scipy.io.savemat(path_ + "/init_data.mat", mdict={'data': init_data})
+            savemat(path_ + "/init_data.mat", mdict={'data': init_data})
             with open(path_ + "/init_labels.txt", 'w') as f:
                 _ = copy.deepcopy(labels)
                 _.append(init_labels)
@@ -1415,6 +1418,8 @@ class label_dialog(QDialog, Ui_label):
         :param start_end_label: a list contains start end labels
         """
         super().__init__()
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+
         self.setupUi(self)
 
         self.type_ = 0
@@ -1501,6 +1506,7 @@ class spectrum_dialog(QDialog, Ui_spectrum):
 
         super().__init__()
         self.setupUi(self)
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 
         self.data = None
         self.start_end = []
@@ -1543,12 +1549,12 @@ class spectrum_dialog(QDialog, Ui_spectrum):
         fnorm = np.array(50 / (.5 * self.SR))
         b, a = butter(3, fnorm, btype='lowpass')
 
-        filtered_data = signal.filtfilt(b, a, self.data)
+        filtered_data = filtfilt(b, a, self.data)
         self.spectrum_F, self.spectrum_P = welch(filtered_data, self.SR, nperseg=self.epoch_length * self.SR)
 
         # Get time frequency
         self.time_frequency_F, self.time_frequency_T, self.time_frequency_P = \
-            signal.spectrogram(self.data, fs=self.SR, noverlap=0, nperseg=self.SR)
+            spectrogram(self.data, fs=self.SR, noverlap=0, nperseg=self.SR)
         cmap = plt.cm.get_cmap('jet')
 
         # plot time frequency

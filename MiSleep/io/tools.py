@@ -81,7 +81,8 @@ def add_hour_marker(df, ac_time):
                 # If inserted a row, reloop the whole
                 break
 
-    new_df['epoch_duration(s)'] = new_df.apply(lambda x: int(x[4]) - int(x[1]), axis=1)
+    # Add one second, if subtract directly, will miss one second in each boutQCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    new_df['epoch_duration(s)'] = new_df.apply(lambda x: int(x[4]) - int(x[1]) + 1, axis=1)
     return new_df
 
 def analyze_phases(hour_marker_df):

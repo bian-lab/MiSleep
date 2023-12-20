@@ -2,11 +2,14 @@
 <ui version="4.0">
  <class>sleep</class>
  <widget class="QMainWindow" name="sleep">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1352</width>
+    <width>1000</width>
     <height>900</height>
    </rect>
   </property>
@@ -18,9 +21,24 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>900</height>
    </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+    <weight>50</weight>
+    <italic>false</italic>
+    <bold>false</bold>
+    <underline>false</underline>
+    <strikeout>false</strikeout>
+    <stylestrategy>PreferAntialias</stylestrategy>
+    <kerning>true</kerning>
+   </font>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>MiSleep</string>
@@ -28,6 +46,15 @@
   <property name="windowIcon">
    <iconset resource="../../imgs/img.qrc">
     <normaloff>:/.png/logo.png</normaloff>:/.png/logo.png</iconset>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -116,7 +143,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1048</width>
+            <width>696</width>
             <height>739</height>
            </rect>
           </property>
@@ -148,7 +175,17 @@
           <font>
            <family>Arial</family>
            <pointsize>10</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+           <underline>false</underline>
+           <strikeout>false</strikeout>
+           <stylestrategy>PreferAntialias</stylestrategy>
+           <kerning>true</kerning>
           </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="mouseTracking">
           <bool>false</bool>
@@ -201,7 +238,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1048</width>
+            <width>696</width>
             <height>120</height>
            </rect>
           </property>
@@ -236,6 +273,13 @@
        <font>
         <family>Arial</family>
         <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <underline>false</underline>
+        <strikeout>false</strikeout>
+        <stylestrategy>PreferAntialias</stylestrategy>
+        <kerning>true</kerning>
        </font>
       </property>
       <property name="focusPolicy">
@@ -255,7 +299,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
-        <number>20</number>
+        <number>5</number>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -270,26 +314,17 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="minimumSize">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
           <size>
-           <width>0</width>
-           <height>30</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>300</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">image: url(:/.png/entire_logo.png);</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
+        </spacer>
        </item>
        <item>
         <widget class="QGroupBox" name="channelGroup">
@@ -299,10 +334,23 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>550</height>
+          </size>
+         </property>
          <property name="font">
           <font>
            <family>Arial</family>
            <pointsize>10</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+           <underline>false</underline>
+           <strikeout>false</strikeout>
+           <stylestrategy>PreferAntialias</stylestrategy>
+           <kerning>true</kerning>
           </font>
          </property>
          <property name="focusPolicy">
@@ -318,13 +366,209 @@
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
-          <item row="4" column="4">
-           <widget class="QPushButton" name="channelDeleteBt">
+          <item row="16" column="4">
+           <widget class="QPushButton" name="reductionBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Down&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>—</string>
+            </property>
+            <property name="shortcut">
+             <string>Down</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0" colspan="2">
+           <widget class="QLabel" name="label_3">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Filter:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="4">
+           <widget class="QPushButton" name="saveDataBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferDefault</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
+            </property>
+            <property name="text">
+             <string>Save selected channel(s)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QPushButton" name="channelShowBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Show</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="4">
+           <widget class="QPushButton" name="saveSleepStageDataBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferDefault</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
+            </property>
+            <property name="text">
+             <string>Merge as sleep stage(s)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="22" column="0" colspan="5">
+           <widget class="QPushButton" name="spectrumBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;S&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Spectrum</string>
+            </property>
+            <property name="shortcut">
+             <string>S</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4">
+           <widget class="QPushButton" name="channelDeleteBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferDefault</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -339,33 +583,8 @@
             </property>
            </widget>
           </item>
-          <item row="10" column="4">
-           <widget class="QDoubleSpinBox" name="hzHighEdit">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="keyboardTracking">
-             <bool>false</bool>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>0.200000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>1000.000000000000000</double>
-            </property>
-            <property name="value">
-             <double>50.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0" colspan="5">
-           <widget class="Line" name="line_3">
+          <item row="20" column="0" colspan="5">
+           <widget class="Line" name="line_5">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -378,200 +597,14 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0" colspan="4">
-           <widget class="QPushButton" name="saveDataBt">
-            <property name="font">
-             <font>
-              <family>Microsoft YaHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	color: rgb(46, 141, 19);
-}</string>
-            </property>
-            <property name="text">
-             <string>Save selected channel(s)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
-           <widget class="QPushButton" name="mergeAllBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	color: rgb(46, 141, 19);
-}</string>
-            </property>
-            <property name="text">
-             <string>Merge</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="5">
-           <widget class="QPushButton" name="defaultTFBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Default channel for time frequency</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="3">
-           <widget class="QPushButton" name="channelShowBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Show</string>
-            </property>
-           </widget>
-          </item>
-          <item row="16" column="4">
-           <widget class="QPushButton" name="reductionBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Down&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>—</string>
-            </property>
-            <property name="shortcut">
-             <string>Down</string>
-            </property>
-           </widget>
-          </item>
-          <item row="22" column="0" colspan="2">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Analysis:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="16" column="0" colspan="2">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Scaler:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="4">
-           <widget class="QPushButton" name="saveSleepStageDataBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	color: rgb(46, 141, 19);
-}</string>
-            </property>
-            <property name="text">
-             <string>Merge as sleep stage(s)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QPushButton" name="channelHideBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Hide</string>
-            </property>
-           </widget>
-          </item>
-          <item row="16" column="3">
-           <widget class="QPushButton" name="amplifyBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Up&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>+</string>
-            </property>
-            <property name="shortcut">
-             <string>Up</string>
-            </property>
-           </widget>
-          </item>
-          <item row="21" column="0" colspan="5">
-           <widget class="Line" name="line_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QPushButton" name="saveAllBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	color: rgb(46, 141, 19);
-}</string>
-            </property>
-            <property name="text">
-             <string>Save</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="5">
-           <widget class="QListView" name="channelList">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="editTriggers">
-             <set>QAbstractItemView::SelectedClicked</set>
-            </property>
-            <property name="selectionMode">
-             <enum>QAbstractItemView::ExtendedSelection</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="18" column="4">
+          <item row="17" column="4">
            <widget class="QDoubleSpinBox" name="spectrumPercentileEdit">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="keyboardTracking">
              <bool>false</bool>
             </property>
@@ -586,38 +619,25 @@
             </property>
            </widget>
           </item>
-          <item row="14" column="0" colspan="5">
-           <widget class="QPushButton" name="filterBt">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;F&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Filter</string>
-            </property>
-            <property name="shortcut">
-             <string>F</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0" colspan="2">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Filter:</string>
-            </property>
-           </widget>
-          </item>
           <item row="10" column="0" colspan="3">
            <widget class="QComboBox" name="passSelecter">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
             <item>
@@ -637,31 +657,183 @@
             </item>
            </widget>
           </item>
-          <item row="23" column="0" colspan="5">
-           <widget class="QPushButton" name="spectrumBt">
+          <item row="1" column="4">
+           <widget class="QPushButton" name="saveAllBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferDefault</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;S&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
             </property>
             <property name="text">
-             <string>Spectrum</string>
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QPushButton" name="mergeAllBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferDefault</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	color: rgb(46, 141, 19);
+}</string>
+            </property>
+            <property name="text">
+             <string>Merge</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="0" colspan="5">
+           <widget class="QPushButton" name="filterBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;F&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Filter</string>
             </property>
             <property name="shortcut">
-             <string>S</string>
+             <string>F</string>
+            </property>
+           </widget>
+          </item>
+          <item row="16" column="0" colspan="2">
+           <widget class="QLabel" name="label_4">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Scaler:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="5">
+           <widget class="QPushButton" name="defaultTFBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Default channel for time frequency</string>
+            </property>
+           </widget>
+          </item>
+          <item row="17" column="0" colspan="4">
+           <widget class="QLabel" name="label">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Colorbar percentile:</string>
             </property>
            </widget>
           </item>
           <item row="10" column="3">
            <widget class="QDoubleSpinBox" name="hzLowEdit">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
             <property name="decimals">
@@ -675,37 +847,160 @@
             </property>
            </widget>
           </item>
-          <item row="18" column="0" colspan="4">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Colorbar percentile:</string>
+          <item row="3" column="0" colspan="5">
+           <widget class="QListView" name="channelList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::SelectedClicked</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
             </property>
            </widget>
           </item>
-          <item row="17" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Shift:</string>
+          <item row="16" column="3">
+           <widget class="QPushButton" name="amplifyBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
             </property>
-           </widget>
-          </item>
-          <item row="17" column="3">
-           <widget class="QPushButton" name="shiftUpBt">
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shift up the signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Up&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
+             <string>+</string>
+            </property>
+            <property name="shortcut">
              <string>Up</string>
             </property>
            </widget>
           </item>
-          <item row="17" column="4">
-           <widget class="QPushButton" name="shiftDownBt">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shift down the signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <item row="4" column="3">
+           <widget class="QPushButton" name="channelHideBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="text">
-             <string>Down</string>
+             <string>Hide</string>
+            </property>
+           </widget>
+          </item>
+          <item row="21" column="0" colspan="2">
+           <widget class="QLabel" name="label_5">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Analysis:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0" colspan="5">
+           <widget class="Line" name="line_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="4">
+           <widget class="QDoubleSpinBox" name="hzHighEdit">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.200000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>50.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -713,7 +1008,26 @@
         </widget>
        </item>
        <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox_3">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>150</height>
+          </size>
+         </property>
          <property name="autoFillBackground">
           <bool>true</bool>
          </property>
@@ -723,11 +1037,27 @@
          <layout class="QGridLayout" name="gridLayout">
           <item row="0" column="4">
            <widget class="QPushButton" name="labelBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;L&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -742,11 +1072,27 @@
           </item>
           <item row="0" column="1">
            <widget class="QRadioButton" name="markerRadio">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -768,13 +1114,27 @@
           </item>
           <item row="8" column="1" colspan="4">
            <widget class="QPushButton" name="saveBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
               <weight>75</weight>
+              <italic>false</italic>
               <bold>true</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferDefault</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;CTRL+S&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -794,11 +1154,27 @@
           </item>
           <item row="0" column="3">
            <widget class="QRadioButton" name="startEndRadio">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;W&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -813,11 +1189,27 @@
           </item>
           <item row="3" column="1">
            <widget class="QPushButton" name="nremBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -832,11 +1224,27 @@
           </item>
           <item row="3" column="3">
            <widget class="QPushButton" name="remBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -851,11 +1259,27 @@
           </item>
           <item row="3" column="4">
            <widget class="QPushButton" name="wakeBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -870,6 +1294,15 @@
           </item>
           <item row="7" column="1" colspan="3">
            <widget class="QCheckBox" name="autoScrollCheckBox">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
              <string>Auto scroll</string>
             </property>
@@ -880,11 +1313,27 @@
           </item>
           <item row="7" column="4">
            <widget class="QPushButton" name="initBt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft YaHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NUM4&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -901,6 +1350,19 @@
         </widget>
        </item>
        <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -911,7 +1373,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>0</height>
+           <height>150</height>
           </size>
          </property>
          <property name="autoFillBackground">
@@ -921,25 +1383,66 @@
           <string>Time</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="6" column="0">
-           <widget class="QRadioButton" name="epochCustomRadio">
+          <item row="0" column="0">
+           <widget class="QDateTimeEdit" name="dateTimeEdit">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
-            <property name="text">
-             <string>Custom(epochs)</string>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="currentSection">
+             <enum>QDateTimeEdit::DaySection</enum>
+            </property>
+            <property name="displayFormat">
+             <string>dd:HH:mm:ss</string>
+            </property>
+            <property name="calendarPopup">
+             <bool>false</bool>
+            </property>
+            <property name="currentSectionIndex">
+             <number>0</number>
+            </property>
+            <property name="timeSpec">
+             <enum>Qt::LocalTime</enum>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QSpinBox" name="secTimeEdit">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
             <property name="keyboardTracking">
@@ -950,12 +1453,25 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="1">
+          <item row="5" column="1">
            <widget class="QSpinBox" name="epochShow">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
             <property name="keyboardTracking">
@@ -966,12 +1482,51 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QComboBox" name="epochSelector">
+          <item row="5" column="0">
+           <widget class="QRadioButton" name="epochCustomRadio">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Microsoft JhengHei UI</family>
               <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="text">
+             <string>Custom(epochs)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QComboBox" name="epochSelector">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <stylestrategy>PreferAntialias</stylestrategy>
+              <kerning>true</kerning>
              </font>
             </property>
             <property name="currentIndex">
@@ -1024,80 +1579,21 @@
             </item>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QDateTimeEdit" name="dateTimeEdit">
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei UI</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="keyboardTracking">
-             <bool>false</bool>
-            </property>
-            <property name="currentSection">
-             <enum>QDateTimeEdit::DaySection</enum>
-            </property>
-            <property name="displayFormat">
-             <string>dd:HH:mm:ss</string>
-            </property>
-            <property name="calendarPopup">
-             <bool>false</bool>
-            </property>
-            <property name="currentSectionIndex">
-             <number>0</number>
-            </property>
-            <property name="timeSpec">
-             <enum>Qt::LocalTime</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="previousEpochBt">
-            <property name="mouseTracking">
-             <bool>false</bool>
-            </property>
-            <property name="tabletTracking">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Previous epoch, LEFT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>&lt;</string>
-            </property>
-            <property name="autoRepeat">
-             <bool>true</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="nextEpochBt">
-            <property name="mouseTracking">
-             <bool>false</bool>
-            </property>
-            <property name="tabletTracking">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Next epoch, RIGHT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>&gt;</string>
-            </property>
-            <property name="autoRepeat">
-             <bool>false</bool>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
