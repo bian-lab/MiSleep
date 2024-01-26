@@ -2,3 +2,19 @@
 Fixed a bug
 Bug: when cilck in the time-frequency axes, the start vaxline will jump to the start time. 
 Solution: Pass the click_signal()  function when click the time-frequency axes by the "event.inaxes" property
+
+2023.12.12 version 1.0.1
+remove previous and next epoch button, fix transfer result bug, will miss one second, "tools.add_hour_marker" last line
+
+2023.12.20 version 1.0.2
+Adjust layout, delete logo in sleep window, delete next and previous epoch button, delete up and down shift button.
+Add QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling) to adjust for high dpi automatically
+
+2024.01.11 version 1.0.2
+Transfer result, calculate duration across 'Marker' will add one second
+Use 'calculate_duration' in tools
+
+2024.01.23 version 1.0.3
+If y_lims contains zero, the following scale will be zero forever
+Set the y_lim to 1e-3 as default value
+

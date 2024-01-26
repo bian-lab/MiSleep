@@ -4,5 +4,5 @@ An efficient software for manually sleep staging, and the automatic version is u
 
 And the manual is also on the way...
 
-![img.png](img.png)
-![img_1.png](img_1.png)
+![img.png](imgs/img.png)
+![img_1.png](imgs/img_1.png)

@@ -123,6 +123,9 @@ class sleep(QMainWindow, Ui_sleep):
         self.y_lims = [[-max(self.data[each][:30]), max(self.data[each][:30])] for each in
                        range(self.channel_num)]  # y-axis lim of each channel data
 
+        # If y_lims is zero, set it to a non zero value, or the following scale will be zero forever
+        self.y_lims = [[-1e-3, 1e-3] if each[0] == 0. else each for each in self.y_lims]
+
         # Initialize signalArea figure
         self.signal_figure = plt.figure()
         # +1 is for time-frequency MiSleep

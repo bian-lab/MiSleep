@@ -12,6 +12,7 @@ import datetime
 
 import pandas as pd
 import matplotlib.pyplot as plt
+
 pd.options.mode.chained_assignment = None
 
 
@@ -30,6 +31,24 @@ def insert_row(df, idx, row):
     above = df[:idx]
     below = df[idx:]
     return pd.concat([above, row, below], axis=0)
+
+
+def calculate_duration(start_sec, end_sec):
+    """
+    If the bout is seperate by Marker, the duration will add one second
+    Detect the end_sec, if it can be divisible by 3600, then minus one of the duration
+    :param start_sec:
+    :type start_sec:
+    :param end_sec:
+    :type end_sec:
+    :return:
+    :rtype:
+    """
+
+    if end_sec % 3600 == 0:
+        return end_sec - start_sec
+    else:
+        return end_sec - start_sec + 1
 
 
 def add_hour_marker(df, ac_time):
@@ -56,7 +75,6 @@ def add_hour_marker(df, ac_time):
     del df
     new_df = new_df.sort_values(["start_sec"]).reset_index(drop=True)
 
-
     # Compare the previous row with the Marker row, if the end_sec larger than the Marker row, add a row after the
     # Marker row
     changed = 1
@@ -82,8 +100,9 @@ def add_hour_marker(df, ac_time):
                 break
 
     # Add one second, if subtract directly, will miss one second in each boutQCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    new_df['epoch_duration(s)'] = new_df.apply(lambda x: int(x[4]) - int(x[1]) + 1, axis=1)
+    new_df['epoch_duration(s)'] = new_df.apply(lambda x: calculate_duration(start_sec=x[1], end_sec=x[4]), axis=1)
     return new_df
+
 
 def analyze_phases(hour_marker_df):
     """
@@ -152,7 +171,6 @@ class Transfer:
                                                      'start/end',
                                                      'phase_code', 'phase'])
 
-        self.sleep_stages_df['epoch_duration(s)'] = self.sleep_stages_df.apply(lambda x: int(x[4]) - int(x[1]), axis=1)
         self.sleep_stages_df['start_time'] = self.sleep_stages_df['start_sec'].apply(
             lambda x: self.ac_time + datetime.timedelta(seconds=int(x)))
         self.sleep_stages_df['end_time'] = self.sleep_stages_df['end_sec'].apply(
@@ -161,7 +179,8 @@ class Transfer:
         self.sleep_stages_df['end_sec'] = self.sleep_stages_df['end_sec'].astype(int)
         self.sleep_stages_df['start/end'] = self.sleep_stages_df['start/end'].astype(int)
         self.sleep_stages_df['phase_code'] = self.sleep_stages_df['phase_code'].astype(int)
-
+        self.sleep_stages_df['epoch_duration(s)'] = self.sleep_stages_df.apply(
+            lambda x: calculate_duration(start_sec=x[1], end_sec=x[4]), axis=1)
         self.group_stages = self.sleep_stages_df.groupby('phase')
 
     def analyze_stage_df(self, df):
