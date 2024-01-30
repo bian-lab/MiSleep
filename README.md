@@ -1,8 +1,5 @@
 # MiSleep
 
-An efficient software for manually sleep staging, and the automatic version is under development, will come soon...
+![logo](./MiSleep/imgs/entire_logo.png)
 
-And the manual is also on the way...
-
-![img.png](imgs/img.png)
-![img_1.png](imgs/img_1.png)
+An efficient software for mice sleep analysis. Check the [misleep_manual](https://github.com/bian-lab/MiSleep/tree/master/misleep_manual) for detail.
