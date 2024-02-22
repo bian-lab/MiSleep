@@ -23,7 +23,6 @@ cffi==1.15.1
 charset-normalizer==3.2.0
 click==8.1.4
 collection==0.1.6
-colorama @ file:///C:/b/abs_a9ozq0l032/croot/colorama_1672387194846/work
 colorspacious==1.1.2
 comm==0.1.4
 contourpy==1.1.0
@@ -39,7 +38,6 @@ docutils==0.20.1
 easyliter==1.0.5
 Eel==0.16.0
 et-xmlfile==1.1.0
-exceptiongroup @ file:///C:/b/abs_25wqfvkf25/croot/exceptiongroup_1668714345637/work
 executing==2.0.0
 fake-useragent==1.4.0
 fastjsonschema==2.18.1
@@ -66,7 +64,6 @@ imageio==2.31.6
 imagesize==1.4.1
 importlib-metadata==6.8.0
 importlib-resources==6.0.0
-iniconfig @ file:///home/linux1/recipes/ci/iniconfig_1610983019677/work
 ipykernel==6.25.2
 ipython==8.12.3
 ipython-genutils==0.2.0
@@ -83,7 +80,6 @@ jsonschema-specifications==2023.7.1
 jupyter==1.0.0
 jupyter-console==6.6.3
 jupyter-contrib-core==0.4.2
-jupyter-contrib-nbextensions @ file:///E:/workplace/d2l/jupyter_contrib_nbextensions-0.5.1-py2.py3-none-any.whl#sha256=2c071f0aa208c569666f656bdc0f66906ca493cf9f06f46db6350db11030ff40
 jupyter-events==0.7.0
 jupyter-highlight-selected-word==0.2.0
 jupyter-latex-envs==1.4.6
@@ -123,7 +119,6 @@ opencv-python==4.8.0.74
 openpyxl==3.1.2
 outcome==1.3.0.post0
 overrides==7.4.0
-packaging @ file:///C:/b/abs_ed_kb9w6g4/croot/packaging_1678965418855/work
 pandas==1.5.3
 pandoc==2.3
 pandocfilters==1.5.0
@@ -134,7 +129,6 @@ Pillow==10.0.0
 pkgutil_resolve_name==1.3.10
 platformdirs==3.8.1
 playwright==1.39.0
-pluggy @ file:///C:/ci/pluggy_1648042776090/work
 plumbum==1.8.2
 ply==3.11
 pooch==1.7.0
@@ -158,7 +152,6 @@ PyQt5-sip==12.12.1
 pyqt5-tools==5.15.9.3.3
 pyqtgraph==0.13.3
 PySocks==1.7.1
-pytest @ file:///C:/b/abs_7di9kcrru2/croot/pytest_1684171622030/work
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-json-logger==2.0.7
@@ -181,14 +174,12 @@ rfc3986-validator==0.1.1
 rpds-py==0.10.6
 scholarly==1.7.11
 scikit-image==0.21.0
-scikit-learn==1.3.1
 scipy==1.10.1
 scooby==0.7.2
 seaborn==0.11.2
 selenium==4.16.0
 Send2Trash==1.8.2
 sgmllib3k==1.0.0
-sip @ file:///C:/Windows/Temp/abs_b8fxd17m2u/croots/recipe/sip_1659012372737/work
 six==1.16.0
 sklearn==0.0.post10
 sniffio==1.3.0
@@ -213,8 +204,6 @@ terminado==0.17.1
 threadpoolctl==3.2.0
 tifffile==2023.7.10
 tinycss2==1.2.1
-toml @ file:///tmp/build/80754af9/toml_1616166611790/work
-tomli @ file:///C:/Windows/TEMP/abs_ac109f85-a7b3-4b4d-bcfd-52622eceddf0hy332ojo/croots/recipe/tomli_1657175513137/work
 tomlkit==0.12.1
 torch==2.1.1+cu121
 torchaudio==2.1.1+cu121
@@ -230,8 +219,6 @@ tzdata==2023.3
 Unidecode==1.3.7
 uri-template==1.3.0
 urllib3==2.0.3
-# Editable install with no version control (visbrain==0.4.5)
--e d:\miniconda3\envs\eeg\lib\site-packages
 vispy==0.13.0
 wcwidth==0.2.8
 webcolors==1.13
